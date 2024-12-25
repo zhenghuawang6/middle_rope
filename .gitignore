@@ -1,0 +1,27 @@
+# download/Llama-3.1-8B-Instruct
+# download/Phi-3-mini-128k-instruct
+# download/StableBeluga-7B
+# download/StableBeluga-13B
+# download/vicuna-7b-v1.5-16k
+download/
+data/
+data/mutiqa/generated_data/
+data/kv/generated_data/
+data/synthwiki/syn_vicuna-7b-v1.5_3000_random.pickle
+data/synthwiki/syn_vicuna-7b-v1.5_3200_random.pickle
+data/mutiqa/nq-open-contriever-msmarco-retrieved-documents.jsonl.gz
+data/synthwiki/madlibs1.csv
+data/synthwiki/madlibs2.csv
+test.ipynb
+utils/lost_in_the_middle/result.log
+utils/lost_in_the_middle/result_test.log
+utils/synthwiki/
+utils/zero_scrolls/
+log/
+utils/lost_in_the_middle/result_softmax.log
+utils/lost_in_the_middle/kv_result.log
+mdqa_results/
+utils/__pycache__
+utils/lost_in_the_middle/__pycache__/
+utils/modify_arch/__pycache__/
+__pycache__/
