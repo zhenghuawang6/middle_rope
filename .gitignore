@@ -16,7 +16,6 @@ utils/lost_in_the_middle/result.log
 utils/lost_in_the_middle/result_test.log
 utils/synthwiki/
 utils/zero_scrolls/
-log/
 utils/lost_in_the_middle/result_softmax.log
 utils/lost_in_the_middle/kv_result.log
 mdqa_results/
