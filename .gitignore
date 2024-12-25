@@ -4,7 +4,6 @@
 # download/StableBeluga-13B
 # download/vicuna-7b-v1.5-16k
 download/
-data/
 data/mutiqa/generated_data/
 data/kv/generated_data/
 data/synthwiki/syn_vicuna-7b-v1.5_3000_random.pickle
