@@ -21,6 +21,7 @@ import sys
 from xopen import xopen
 import logging
 from copy import deepcopy
+from utils.log_utils.utils import get_git_commit_hash
 import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 from utils.lost_in_the_middle.eval_qa_response import evaluate_qa
@@ -42,7 +43,7 @@ from utils.lost_in_the_middle.prompting import (
     get_synthwiki_qa_prompt
 )
 
-from utils.modify_arch.setup_normal import setup_models
+from modify_arch.setup_normal import setup_models
 
 def set_seed(args):
     np.random.seed(args.seed)
@@ -78,20 +79,16 @@ if __name__ == '__main__':
     parser.add_argument("--model_name", type=str, default="")
     parser.add_argument("--cache_dir", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42, help="random seed for initialization")
-
     parser.add_argument('--enable_ms_poe', action='store_true')
-    parser.add_argument('--enable_changed_rope', action='store_true')
-    parser.add_argument("--apply_layers", type=str, default="")
-    parser.add_argument("--narrow_scale", type=float, default=1.5)
-    parser.add_argument("--boost_scale", type=float, default=1)
-    parser.add_argument("--context_len", type=int, default=512)
 
     parser.add_argument('--only_true', action='store_true', help='Only use the relevent documenets in the prompt')
     parser.add_argument("--sample_num", type=int, default=10)
     parser.add_argument("--answer_idx", type=int, default=0)
     parser.add_argument("--batch_size", type=int, default=2)
     args = parser.parse_args()
-    logging_filename = "../log/norm/result.log"
+
+    commit_hash_id = get_git_commit_hash()
+    logging_filename = f"../log/phi3/{commit_hash_id}_result.log"
     directory = os.path.dirname(logging_filename)
     os.makedirs(directory, exist_ok=True)
     with open(logging_filename, 'w') as file:
@@ -106,8 +103,12 @@ if __name__ == '__main__':
     args.n_gpu = torch.cuda.device_count()
     set_seed(args)
 
-    #加载模型
-    config, tokenizer, model = setup_models(args)
+    # 加载模型
+    # config, tokenizer, model = setup_models(args)
+    #加载llama3
+    config = AutoConfig.from_pretrained(args.model_name)
+    model = AutoModelForCausalLM.from_pretrained(args.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, cache_dir=args.cache_dir, padding_side='left')
     accelerator.wait_for_everyone()
 
     ## Loading Dataset
@@ -175,12 +176,13 @@ if __name__ == '__main__':
         with torch.no_grad():
             for batched_prompts in tqdm(chunks(sub_prompts, args.batch_size), total=math.ceil(len(sub_prompts) / args.batch_size)):
                 if args.batch_size > 1:
-                    input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True).input_ids.to(model.device)
+                    tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
                 else:
-                    input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings).input_ids.to(model.device)
-                input_ids = input_ids.cuda()
+                    tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
+               
+                input_ids = tok_input.input_ids
                 outputs = model.generate(
-                    input_ids=input_ids,
+                    **tok_input,
                     max_length=100 + len(input_ids[0]),
                     use_cache=True,
                     return_dict_in_generate=False,

@@ -2,31 +2,8 @@
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
 
-cuda="5"
+cuda="7"
 num_process=1
-#测试不同的长文本
-for total_docs in 10 20 30;
-do
-for gold in 1 $((total_docs / 2)) $((total_docs));
-do
-
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29509 ../inference_qa_llama3.py \
-    --input_path ../data/mutiqa/generated_data/nq-open-${total_docs}_total_documents_gold_at_0.jsonl.gz \
-    --output_path ../result/llama3_result/mdqa_10documents${i}.json \
-    --model_name meta-llama/Llama-2-7b-chat-hf \
-    --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"  \
-    --seed 42 \
-    --sample_num 100 \
-    --batch_size 4 \
-    --answer_idx $gold \
-
-done
-done
-
-
-
-
-
 #baseline
 # for j in 1.3 1.4 1.5 1.6 1.7 ;
 # do
@@ -64,6 +41,18 @@ done
 #     --boost_scale 1.5
 
 
+CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../src/inference_qa_normal.py \
+    --input_path ../data/synthwiki/syn_vicuna-7b-v1.5_3200_random.pickle \
+    --output_path ../result/mdqa_result/mdqa_10documents${i}.json \
+    --model_name ../download/vicuna-7b-v1.5-16k \
+    --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"  \
+    --seed 42 \
+    --enable_changed_rope \
+    --sample_num 4 \
+    --batch_size 4 \
+    --answer_idx 1 \
+    --narrow_scale 1.5 \
+    --boost_scale 1.5 \
 
 # CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 Ms-PoE/inference_qa.py \
 #     --input_path Ms-PoE/data/mdqa_10documents.jsonl.gz \

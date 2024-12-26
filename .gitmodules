@@ -1,0 +1,7 @@
+[submodule "src/utils/synthwiki"]
+    path = src/utils/synthwiki
+    url = https://github.com/adamlerer/synthwiki.git
+
+[submodule "src/utils/zero_scrolls"]
+    path = src/utils/zero_scrolls
+    url = https://github.com/tau-nlp/zero_scrolls.git

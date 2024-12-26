@@ -4,7 +4,7 @@ export https_proxy=127.0.0.1:7890
 cuda="7"
 num_pro=1
 
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../inference_qa_layerwise.py \
+CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
     --input_path ../download/Llama-2-7b-chat-hf \
     --output_path ../result/mdqa_result/mdqa_10_layerwise_documents${i}.json \
     --model_name lmsys/vicuna-7b-v1.5 \

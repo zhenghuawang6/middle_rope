@@ -17,7 +17,7 @@ import torch
 from tqdm import tqdm
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 from xopen import xopen
-from utils.modify_arch.setup_normal import setup_models
+from modify_arch.setup_normal import setup_models
 from utils.lost_in_the_middle.prompting import (
     Document,
     get_closedbook_qa_prompt,

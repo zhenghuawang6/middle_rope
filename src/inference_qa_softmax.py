@@ -10,7 +10,6 @@ import torch
 import logging
 import sys
 import warnings
-import pickle
 import argparse
 import dataclasses
 import numpy as np
@@ -19,8 +18,11 @@ from accelerate.utils import gather_object
 from tqdm import tqdm
 from rouge import Rouge
 from xopen import xopen
+from utils.log_utils.utils import get_git_commit_hash
 import logging
+import pickle
 from copy import deepcopy
+from utils.lost_in_the_middle.eval_qa_response import evaluate_qa
 accelerator = Accelerator()
 
 warnings.filterwarnings('ignore')
@@ -33,8 +35,8 @@ from utils.lost_in_the_middle.prompting import (
     get_qa_prompt_only_true_index,
     get_synthwiki_qa_prompt
 )
-from utils.lost_in_the_middle.eval_qa_response import evaluate_qa
-from utils.modify_arch.setup_layerwise import setup_models_layerwise
+
+from modify_arch.setup_softmax import setup_models_softmax
 
 def set_seed(args):
     np.random.seed(args.seed)
@@ -71,51 +73,42 @@ if __name__ == '__main__':
     parser.add_argument("--cache_dir", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42, help="random seed for initialization")
 
-
     parser.add_argument("--apply_layers", type=str, default="")
-    parser.add_argument('--monotonic_decrease', action='store_true')
     parser.add_argument('--enable_changed_rope', action='store_true')
-    parser.add_argument("--small_bound", type=float, default=1.2)
-    parser.add_argument("--big_bound", type=float, default=1.8)
-    parser.add_argument("--steps", type=int, default=4)
     parser.add_argument("--head_type", type=str, default=None)
-    parser.add_argument("--context_len", type=int, default=512)
-    # parser.add_argument("--skip_layers", type=int, default=0)
     parser.add_argument('--only_true', action='store_true', help='Only use the relevent documenets in the prompt')
 
     parser.add_argument("--sample_num", type=int, default=10)
     parser.add_argument("--answer_idx", type=int, default=0)
     parser.add_argument("--batch_size", type=int, default=2)
     args = parser.parse_args()
-    logging_filename = "../log/layerwise/result.log"
+
+    commit_hash_id = get_git_commit_hash()
+    logging_filename = f"../log/softmax/{commit_hash_id}_result.log"
     directory = os.path.dirname(logging_filename)
     os.makedirs(directory, exist_ok=True)
     with open(logging_filename, 'w') as file:
         file.write("")
-
     logger = logging.getLogger(__name__)
     logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filename=logging_filename, filemode='a')
-    
+
     if accelerator.is_main_process:
         logger.info("running %s", " ".join(sys.argv))
     #处理相关的step
-    args.layer_scales = np.linspace(args.small_bound, args.big_bound, args.steps).tolist()
-    if args.monotonic_decrease:
-        args.layer_scales = args.layer_scales[::-1]
     ## set up device
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     args.n_gpu = torch.cuda.device_count()
     set_seed(args)
 
     ## Loading Models
-    config, tokenizer, model = setup_models_layerwise(args)
+    config, tokenizer, model = setup_models_softmax(args)
     accelerator.wait_for_everyone()
 
     ## Loading Dataset
     examples = []
     prompts = []
     all_model_documents = []
-    if "pickle" not in args.input_path:
+    if not args.input_path.endswith("pickle"):
         with xopen(args.input_path, 'r') as f:
             for line in f:
                 if line.strip() != '':
@@ -148,6 +141,7 @@ if __name__ == '__main__':
                     examples.append(deepcopy(input_example))
                     all_model_documents.append(documents)
     else:
+        #synthwiki
         synthwiki_data = pickle.load(open(args.input_path,"rb"))
         for single_data in synthwiki_data:
             question = single_data["question"]
@@ -166,12 +160,12 @@ if __name__ == '__main__':
 
     #对样本进行了采样
     if len(prompts) > args.sample_num:
-        prompts = prompts[-args.sample_num:]
-        examples = examples[-args.sample_num:]
-        all_model_documents = all_model_documents[-args.sample_num:]
+        prompts = prompts[:args.sample_num]
+        examples = examples[:args.sample_num]
+        all_model_documents = all_model_documents[:args.sample_num]
 
 
-    # print("进行推理。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。")
+    # Generate Results
     responses = []
     with accelerator.split_between_processes(prompts) as sub_prompts:
         with torch.no_grad():
@@ -188,6 +182,7 @@ if __name__ == '__main__':
                     return_dict_in_generate=False,
                     do_sample=False
                 )
+
                 for i, generated_sequence in enumerate(outputs):
                     text = tokenizer.decode(generated_sequence, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                     if input_ids is None:
@@ -227,4 +222,5 @@ if __name__ == '__main__':
                     output_example["model_use_random_ordering"] = False
                     f.write(json.dumps(output_example) + "\n")
 
+            #写入完毕之后  进行测试
             evaluate_qa(args.output_path,None,logger)
