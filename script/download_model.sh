@@ -1,4 +1,5 @@
 export HF_ENDPOINT=https://hf-mirror.com
+
 # mkdir ../download
 # huggingface-cli download --resume-download stabilityai/StableBeluga-7B --local-dir /data/wzh/paperproject/Ms/Ms-PoE/download/StableBeluga-7B
 # huggingface-cli download --resume-download stabilityai/StableBeluga-13B --local-dir /data/wzh/paperproject/Ms/Ms-PoE/download/StableBeluga-13B

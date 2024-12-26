@@ -30,8 +30,6 @@ from utils.lost_in_the_middle.prompting import (
 accelerator = Accelerator()
 logger = logging.getLogger(__name__)
 random.seed(0)
-
-
 def main(
     input_path,
     model_name,
