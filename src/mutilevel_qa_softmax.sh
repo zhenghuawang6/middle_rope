@@ -8,7 +8,7 @@ num_pro=1
 
 for i in 5 ;  
 do  
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29510 ../inference_qa_softmax.py \
+CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../inference_qa_softmax.py \
     --input_path ../data/synthwiki/syn_vicuna-7b-v1.5_3200_random.pickle \
     --output_path ../result/mdqa_result/mdqa_10_softmax_documents${i}.json \
     --model_name lmsys/vicuna-7b-v1.5 \
