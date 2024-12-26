@@ -1,0 +1,4 @@
+sudo docker pull dockerpull.org/paketobuildpacks/miniconda #国内镜像网站
+docker run -d -p 8888:8888 -v ./:/middle_rope dockerpull.org/paketobuildpacks/miniconda #端口映射以及卷映射
+docker build -t python-env . #构建容器
+docker run -it --name python-container python-env  #运行容器并进入伪终端
