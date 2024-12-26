@@ -1,3 +1,5 @@
+##改进地方！
+
 1. **确定一套或者几套 conda 或者 docker 容器的环境**  
    增加一个 `requirement.txt` 或者 `dockerfile`（在常用的机器上部署即可）。推荐使用`docker`.
 
@@ -14,8 +16,8 @@
 
 ```
 data/
- 	src/
-		modify_arch/
+    src/
+	modify_arch/
         inference*.py
     script/
         mutilevel*.sh
