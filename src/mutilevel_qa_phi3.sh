@@ -2,8 +2,8 @@
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
 
-cuda="7"
-num_process=1
+cuda="5,7"
+num_process=2
 #baseline
 # for j in 1.3 1.4 1.5 1.6 1.7 ;
 # do
@@ -47,7 +47,7 @@ CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main
     --model_name ../download/Phi-3-mini-128k-instruct \
     --seed 42 \
     --sample_num 500 \
-    --batch_size 4 \
+    --batch_size 2 \
     --answer_idx 1 \
 
 # CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 Ms-PoE/inference_qa.py \

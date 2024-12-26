@@ -40,7 +40,8 @@ def main(input_path, num_total_documents, gold_index, output_path):
 
     # Validate that we have at least num_total_documents for every example
     with xopen(input_path) as fin:
-        for line in tqdm(fin):
+        lines = fin.readlines()
+        for line in tqdm(lines, desc="Processing lines", file=sys.stderr):
             qa_retrieval_result = json.loads(line)
             example_num_documents = len([doc for doc in qa_retrieval_result["ctxs"] if doc["hasanswer"] is False])
             if num_total_documents > example_num_documents:
@@ -51,7 +52,8 @@ def main(input_path, num_total_documents, gold_index, output_path):
 
     num_output_examples = 0
     with xopen(input_path) as fin, xopen(output_path, "w") as fout:
-        for line in tqdm(fin):
+        lines = fin.readlines()
+        for line in tqdm(lines,desc="Processing lines", file=sys.stderr):
             qa_retrieval_result = json.loads(line)
             # Get documents that don't contain the answer
             valid_distractors_with_retrieval_indices = [

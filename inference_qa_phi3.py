@@ -177,7 +177,7 @@ if __name__ == '__main__':
                 else:
                     tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
                
-                input_ids = input_ids.cuda()
+                input_ids = tok_input.input_ids
                 outputs = model.generate(
                     **tok_input,
                     max_length=100 + len(input_ids[0]),

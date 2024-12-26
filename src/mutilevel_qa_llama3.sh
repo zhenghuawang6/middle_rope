@@ -2,7 +2,7 @@
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
 
-cuda="7"
+cuda="5"
 num_process=1
 #测试不同的长文本
 for total_docs in 10 20 30;
@@ -13,10 +13,10 @@ do
 CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29509 ../inference_qa_llama3.py \
     --input_path ../data/mutiqa/generated_data/nq-open-${total_docs}_total_documents_gold_at_0.jsonl.gz \
     --output_path ../result/llama3_result/mdqa_10documents${i}.json \
-    --model_name ../download/Llama-3.1-8B-Instruct \
+    --model_name meta-llama/Llama-2-7b-chat-hf \
     --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"  \
     --seed 42 \
-    --sample_num 500 \
+    --sample_num 100 \
     --batch_size 4 \
     --answer_idx $gold \
 

@@ -1,0 +1,1 @@
+2024-12-25 20:07:11,937 - inference_qa_phi3 - INFO - running ../inference_qa_phi3.py --input_path ../data/mutiqa/generated_data/mdqa_10documents.jsonl.gz --output_path ../result/phi3_result/mdqa_10documents.json --model_name ../download/Phi-3-mini-128k-instruct --seed 42 --sample_num 500 --batch_size 4 --answer_idx 1

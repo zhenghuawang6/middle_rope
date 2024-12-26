@@ -1,1 +1,3 @@
 2024-12-25 19:43:15,683 - inference_qa_llama3 - INFO - running ../inference_qa_llama3.py --input_path ../data/mutiqa/generated_data/mdqa_10documents.jsonl.gz --output_path ../result/phi3_result/mdqa_10documents.json --model_name ../download/Phi-3-mini-128k-instruct --seed 42 --sample_num 500 --batch_size 4 --answer_idx 5
+2024-12-25 20:02:51,004 - eval_qa_response - INFO - Computing metrics
+2024-12-25 20:02:51,038 - eval_qa_response - INFO - best_subspan_em: 0.342

@@ -3,6 +3,8 @@
 benchmarking MDQA  能够指定正确答案在哪一个部分
 '''
 import os
+os.environ["http_proxy"] = "127.0.0.1:7890"
+os.environ["https_proxy"] = "127.0.0.1:7890"
 import pdb
 import json
 import math
@@ -24,6 +26,9 @@ from copy import deepcopy
 import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 from utils.lost_in_the_middle.eval_qa_response import evaluate_qa
+from huggingface_hub import login
+login(token="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")
+
 def beijing(sec, what):
     beijing_time = datetime.datetime.now() + datetime.timedelta(hours=8)
     return beijing_time.timetuple()
@@ -49,6 +54,17 @@ def set_seed(args):
     torch.manual_seed(args.seed)
     if args.n_gpu > 0:
         torch.cuda.manual_seed_all(args.seed)
+
+def format_chat_prompt(prompt, tokenizer):
+    messages =messages = [
+        {"role": "system", "content": "You are a helpful chatbot!"},
+        {"role": "user", "content": prompt},
+    ]
+    messages_tokenized = tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True, return_tensors="pt"
+    )
+    return messages_tokenized
+
 
 def format_instruct_prompt(instruction):
     INSTRUCTION_KEY = "### Instruction:"
@@ -82,8 +98,6 @@ if __name__ == '__main__':
     parser.add_argument('--enable_ms_poe', action='store_true')
     parser.add_argument('--enable_changed_rope', action='store_true')
     parser.add_argument("--apply_layers", type=str, default="")
-    parser.add_argument("--narrow_scale", type=float, default=1.5)
-    parser.add_argument("--boost_scale", type=float, default=1)
     parser.add_argument("--context_len", type=int, default=512)
 
     parser.add_argument('--only_true', action='store_true', help='Only use the relevent documenets in the prompt')
@@ -91,23 +105,28 @@ if __name__ == '__main__':
     parser.add_argument("--answer_idx", type=int, default=0)
     parser.add_argument("--batch_size", type=int, default=2)
     args = parser.parse_args()
-    logging_filename = "../log/norm/result.log"
+    logging_filename = "../log/llama3/result.log"
     directory = os.path.dirname(logging_filename)
     os.makedirs(directory, exist_ok=True)
-    with open(logging_filename, 'w') as file:
-        file.write("")
+    if not os.path.exists(logging_filename):
+        with open(logging_filename, 'w') as file:
+            pass
     logger = logging.getLogger(__name__)
     logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filename=logging_filename, filemode='a')
 
     if accelerator.is_main_process:
-        logger.info("running %s", " ".join(sys.argv))
+        logger.info(" ".join(["输入文件："+args.input_path,"正确答案的编号："+str(args.answer_idx)]))
+
     ## set up device
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     args.n_gpu = torch.cuda.device_count()
     set_seed(args)
 
-    #加载模型
-    config, tokenizer, model = setup_models(args)
+    model = AutoModelForCausalLM.from_pretrained(args.model_name).cuda()
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, cache_dir=args.cache_dir, padding_side='left')
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    config = AutoConfig.from_pretrained(args.model_name)
     accelerator.wait_for_everyone()
 
     ## Loading Dataset
@@ -141,8 +160,9 @@ if __name__ == '__main__':
                             query_aware_contextualization=False,
                             answer_idx=args.answer_idx
                         )
-                    if "instruct" in args.model_name:
+                    if "Instruct" in args.model_name:
                         prompt = format_instruct_prompt(prompt)
+                    # prompt = format_chat_prompt(prompt, tokenizer)
                     prompts.append(prompt)
                     examples.append(deepcopy(input_example))
                     all_model_documents.append(documents)
@@ -160,8 +180,8 @@ if __name__ == '__main__':
             prompts.append(prompt)
             examples.append(deepcopy(single_data))
             all_model_documents.append(documents)
-        if "instruct" in args.model_name:
-            prompt = format_instruct_prompt(prompt)
+        # if "instruct" in args.model_name:
+        #     prompt = format_instruct_prompt(prompt)
     #对样本进行了采样
     if len(prompts) > args.sample_num:
         prompts = prompts[:args.sample_num]
@@ -175,12 +195,14 @@ if __name__ == '__main__':
         with torch.no_grad():
             for batched_prompts in tqdm(chunks(sub_prompts, args.batch_size), total=math.ceil(len(sub_prompts) / args.batch_size)):
                 if args.batch_size > 1:
-                    input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True).input_ids.to(model.device)
+                    tok_inputs = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
                 else:
-                    input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings).input_ids.to(model.device)
-                input_ids = input_ids.cuda()
+                    tok_inputs = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
+                tok_inputs = {key: value.cuda() for key, value in tok_inputs.items()}
+                input_ids = tok_inputs["input_ids"]
+                # print(input_ids.shape)
                 outputs = model.generate(
-                    input_ids=input_ids,
+                    **tok_inputs,
                     max_length=100 + len(input_ids[0]),
                     use_cache=True,
                     return_dict_in_generate=False,
@@ -198,7 +220,7 @@ if __name__ == '__main__':
                                 clean_up_tokenization_spaces=True,
                             )
                         )
-                    new_text = text[prompt_length:]
+                    new_text = text[prompt_length-10:]
                     responses.append(new_text)
 
         #从所有的设备上搜集数据
@@ -214,14 +236,10 @@ if __name__ == '__main__':
                 for example, model_documents, prompt, response in zip(examples, all_model_documents, prompts, responses):
                     output_example = deepcopy(example)
                     # Add some extra metadata to the output example
-                    output_example["model_prompt"] = prompt
                     # output_example["model_documents"] = [dataclasses.asdict(document) for document in model_documents]
                     output_example["model_answer"] = response
+                    output_example["model_prompt"] = prompt
                     output_example["model"] = args.model_name
-                    output_example["model_temperature"] = 0
-                    output_example["model_top_p"] = "None"
-                    output_example["model_prompt_mention_random_ordering"] = False
-                    output_example["model_use_random_ordering"] = False
                     f.write(json.dumps(output_example) + "\n")
 
             evaluate_qa(args.output_path,None,logger)
