@@ -41,14 +41,14 @@ num_process=1
 #     --boost_scale 1.5
 
 
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../inference_qa_llama3.py \
+CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../inference_qa_phi3.py \
     --input_path ../data/mutiqa/generated_data/mdqa_10documents.jsonl.gz \
     --output_path ../result/phi3_result/mdqa_10documents${i}.json \
     --model_name ../download/Phi-3-mini-128k-instruct \
     --seed 42 \
     --sample_num 500 \
     --batch_size 4 \
-    --answer_idx 5 \
+    --answer_idx 1 \
 
 # CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 Ms-PoE/inference_qa.py \
 #     --input_path Ms-PoE/data/mdqa_10documents.jsonl.gz \
