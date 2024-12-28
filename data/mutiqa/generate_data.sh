@@ -1,4 +1,4 @@
-for total_docs in 10 20 30;
+for total_docs in 10 20 30 40 50 60;
 do
     for gold in 0 $((total_docs / 2)) $((total_docs - 1));
     do

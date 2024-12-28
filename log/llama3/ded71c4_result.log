@@ -1,0 +1,6 @@
+2024-12-28 17:06:12,470 - inference_qa_llama3 - INFO - 输入文件：../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_7000_first.pickle 正确答案的编号：0
+2024-12-28 17:50:46,403 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：1
+2024-12-28 17:52:45,498 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：25
+2024-12-28 17:53:58,127 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：1
+2024-12-28 17:55:39,824 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：25
+2024-12-28 17:55:59,479 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：50

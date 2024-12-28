@@ -92,7 +92,7 @@ if __name__ == '__main__':
     parser.add_argument("--batch_size", type=int, default=2)
     args = parser.parse_args()
     commit_hash_id = get_git_commit_hash()
-    logging_filename = f"../log/norm/{commit_hash_id}_result.log"
+    logging_filename = f"../log/vicuna_1.5_16k/{commit_hash_id}_result.log"
     directory = os.path.dirname(logging_filename)
     os.makedirs(directory, exist_ok=True)
     with open(logging_filename, 'w') as file:

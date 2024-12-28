@@ -122,3 +122,5 @@
 2024-12-28 16:15:44,339 - eval_qa_response - INFO - Computing metrics
 2024-12-28 16:15:44,348 - eval_qa_response - INFO - best_subspan_em: 1.0
 2024-12-28 16:15:54,804 - inference_qa_llama3 - INFO - 输入文件：../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_5000_halfway.pickle 正确答案的编号：0
+2024-12-28 17:06:01,757 - eval_qa_response - INFO - Computing metrics
+2024-12-28 17:06:01,769 - eval_qa_response - INFO - best_subspan_em: 1.0

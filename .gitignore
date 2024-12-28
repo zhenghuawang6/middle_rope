@@ -19,7 +19,7 @@ utils/lost_in_the_middle/result_test.log
 # utils/zero_scrolls/
 utils/lost_in_the_middle/result_softmax.log
 utils/lost_in_the_middle/kv_result.log
-mdqa_results/
+results/
 # utils/__pycache__
 # utils/lost_in_the_middle/__pycache__/
 # utils/modify_arch/__pycache__/
