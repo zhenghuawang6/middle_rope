@@ -125,10 +125,11 @@ if __name__ == '__main__':
     args.n_gpu = torch.cuda.device_count()
     set_seed(args)
 
-    model = AutoModelForCausalLM.from_pretrained(args.model_name).cuda()
+    model = AutoModelForCausalLM.from_pretrained(args.model_name).eval().cuda()
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, cache_dir=args.cache_dir, padding_side='left')
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.add_special_tokens({'pad_token': '<custom_pad>'})
+    model.resize_token_embeddings(len(tokenizer))
+
     config = AutoConfig.from_pretrained(args.model_name)
     accelerator.wait_for_everyone()
 
@@ -198,18 +199,19 @@ if __name__ == '__main__':
         with torch.no_grad():
             for batched_prompts in tqdm(chunks(sub_prompts, args.batch_size), total=math.ceil(len(sub_prompts) / args.batch_size)):
                 if args.batch_size > 1:
-                    tok_inputs = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
+                    tok_inputs = tokenizer(batched_prompts, add_special_tokens=True, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
                 else:
-                    tok_inputs = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
+                    tok_inputs = tokenizer(batched_prompts, add_special_tokens=True, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
                 tok_inputs = {key: value.cuda() for key, value in tok_inputs.items()}
                 input_ids = tok_inputs["input_ids"]
                 # print(input_ids.shape)
                 outputs = model.generate(
                     **tok_inputs,
-                    max_length=100 + len(input_ids[0]),
+                    max_length=200 + len(input_ids[0]),
                     use_cache=True,
                     return_dict_in_generate=False,
-                    do_sample=False
+                    do_sample=False,
+                    pad_token_id=tokenizer.pad_token_id
                 )
                 for i, generated_sequence in enumerate(outputs):
                     text = tokenizer.decode(generated_sequence, skip_special_tokens=True, clean_up_tokenization_spaces=True)
@@ -223,7 +225,9 @@ if __name__ == '__main__':
                                 clean_up_tokenization_spaces=True,
                             )
                         )
-                    new_text = text[prompt_length-10:]
+                    new_text = text[prompt_length:]
+                    print(new_text)
+                    print("-----------------------------------------")
                     responses.append(new_text)
 
         #从所有的设备上搜集数据

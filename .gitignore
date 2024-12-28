@@ -8,6 +8,7 @@ data/mutiqa/generated_data/
 data/kv/generated_data/
 data/synthwiki/syn_vicuna-7b-v1.5_3000_random.pickle
 data/synthwiki/syn_vicuna-7b-v1.5_3200_random.pickle
+data/synthwiki/generated_data/
 data/mutiqa/nq-open-contriever-msmarco-retrieved-documents.jsonl.gz
 data/synthwiki/madlibs1.csv
 data/synthwiki/madlibs2.csv

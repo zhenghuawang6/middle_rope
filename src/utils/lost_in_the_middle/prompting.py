@@ -87,7 +87,30 @@ def get_synthwiki_qa_prompt(
         formatted_documents.append(f"Document [{document_index+1}]: {document}")
     return prompt_template.format(question=question, search_results="\n".join(formatted_documents))
 
+# def get_qa_prompt_index(
+#     question: str, documents: List[Document], mention_random_ordering: bool, query_aware_contextualization: bool, answer_idx: int
+# ):
+#     if not question:
+#         raise ValueError(f"Provided `question` must be truthy, got: {question}")
+#     if not documents:
+#         raise ValueError(f"Provided `documents` must be truthy, got: {documents}")
 
+#     if mention_random_ordering and query_aware_contextualization:
+#         raise ValueError("Mentioning random ordering cannot be currently used with query aware contextualization")
+
+#     if mention_random_ordering:
+#         prompt_filename = "qa_ordered_randomly.prompt"
+#     elif query_aware_contextualization:
+#         prompt_filename = "qa_with_query_aware_contextualization.prompt"
+#     else:
+#         prompt_filename = "qa.prompt"
+
+#     with open(PROMPTS_ROOT / prompt_filename) as f:
+#         prompt_template = f.read().rstrip("\n")
+#     formatted_documents = []
+#     for document_index, document in enumerate(documents):
+#         formatted_documents.append(f"Document [{document_index+1}]: {documents[document_index].text}")
+#     return prompt_template.format(question=question, search_results="\n".join(formatted_documents))
 
 def get_qa_prompt_index(
     question: str, documents: List[Document], mention_random_ordering: bool, query_aware_contextualization: bool, answer_idx: int
@@ -109,10 +132,23 @@ def get_qa_prompt_index(
 
     with open(PROMPTS_ROOT / prompt_filename) as f:
         prompt_template = f.read().rstrip("\n")
+
+    # Format the documents into strings
+    gold_index = 0
+    for document_index, document in enumerate(documents):
+        if document.isgold:
+            gold_index = document_index
+            break 
+
     formatted_documents = []
     for document_index, document in enumerate(documents):
-        formatted_documents.append(f"Document [{document_index+1}]: {documents[document_index].text}")
-    return prompt_template.format(question=question, search_results="\n".join(formatted_documents))
+        if document.isgold: continue
+        formatted_documents.append(f"Document [{document_index+1}](Title: {documents[document_index].title}) {documents[document_index].text}")
+
+    corrent_documents = [f"Document [{gold_index+1}](Title: {documents[gold_index].title}) {documents[gold_index].text}"]
+    output_documents = formatted_documents[:answer_idx] + corrent_documents + formatted_documents[answer_idx:]
+
+    return prompt_template.format(question=question, search_results="\n".join(output_documents))
 
 def get_qa_prompt_only_true_index(
     question: str, documents: List[Document], mention_random_ordering: bool, query_aware_contextualization: bool, answer_idx: int

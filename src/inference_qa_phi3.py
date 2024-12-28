@@ -91,13 +91,15 @@ if __name__ == '__main__':
     logging_filename = f"../log/phi3/{commit_hash_id}_result.log"
     directory = os.path.dirname(logging_filename)
     os.makedirs(directory, exist_ok=True)
-    with open(logging_filename, 'w') as file:
-        file.write("")
+    if not os.path.exists(logging_filename):
+        with open(logging_filename, 'w') as file:
+            file.write("")
     logger = logging.getLogger(__name__)
     logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filename=logging_filename, filemode='a')
 
     if accelerator.is_main_process:
-        logger.info("running %s", " ".join(sys.argv))
+        logger.info(f"model_name:{args.model_name},dataset:{args.input_path},answer_index:{args.answer_idx}")
+
     ## set up device
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     args.n_gpu = torch.cuda.device_count()
@@ -107,8 +109,9 @@ if __name__ == '__main__':
     # config, tokenizer, model = setup_models(args)
     #加载llama3
     config = AutoConfig.from_pretrained(args.model_name)
-    model = AutoModelForCausalLM.from_pretrained(args.model_name)
+    model = AutoModelForCausalLM.from_pretrained(args.model_name).eval().cuda()
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False, cache_dir=args.cache_dir, padding_side='left')
+
     accelerator.wait_for_everyone()
 
     ## Loading Dataset
@@ -176,11 +179,11 @@ if __name__ == '__main__':
         with torch.no_grad():
             for batched_prompts in tqdm(chunks(sub_prompts, args.batch_size), total=math.ceil(len(sub_prompts) / args.batch_size)):
                 if args.batch_size > 1:
-                    tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
+                    tok_input = tokenizer(batched_prompts, add_special_tokens=True, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
                 else:
-                    tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
-               
-                input_ids = tok_input.input_ids
+                    tok_input = tokenizer(batched_prompts, add_special_tokens=True, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
+                tok_input = {key: value.cuda() for key, value in tok_input.items()}
+                input_ids = tok_input["input_ids"]
                 outputs = model.generate(
                     **tok_input,
                     max_length=100 + len(input_ids[0]),
@@ -201,6 +204,8 @@ if __name__ == '__main__':
                             )
                         )
                     new_text = text[prompt_length:]
+                    print(new_text)
+                    print("--------------------------------")
                     responses.append(new_text)
 
         #从所有的设备上搜集数据

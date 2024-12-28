@@ -56,9 +56,9 @@ class MutiLlamaAttention(nn.Module):
         self._init_rope()
 
     def _init_rope(self):
-        #index放大
+        #index间隔放大
         self.rotary_emb_boost = LlamaLinearScalingRotaryEmbedding(self.head_dim, max_position_embeddings=self.max_position_embeddings, scaling_factor=self.boost_scale)
-        #index减少
+        #index间隔减少
         self.rotary_emb_narrow = LlamaLinearScalingRotaryEmbedding(self.head_dim, max_position_embeddings=self.max_position_embeddings, scaling_factor=self.narrow_scale)
         # #index放大
         # self.rotary_emb1 = LlamaDynamicNTKScalingRotaryEmbedding(self.head_dim, max_position_embeddings=self.max_position_embeddings, scaling_factor=self.big_scale)

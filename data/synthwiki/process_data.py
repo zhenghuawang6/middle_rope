@@ -39,7 +39,7 @@ def insertIntoJunk(junk, doc, insert_place):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Args')
     parser.add_argument('--input_file', 
-                        default='/data/wzh/paperproject/Ms/Ms-PoE/data/synthwiki/madlibs1.csv',
+                        default='../../data/synthwiki/madlibs1.csv',
                         help='Where questions?')
     parser.add_argument('--junk_size', 
                         default=3200,
@@ -81,4 +81,4 @@ if __name__ == "__main__":
         #进行存储
         result.append({"question":question, "ctxs":supp_docs, "answers":answer})
     model_name = model_name.split("/")[-1]
-    pickle.dump(result,open(f"syn_{model_name}_{junk_size}_{insert_place}.pickle","wb"))
+    pickle.dump(result,open(f"./generated_data/syn_{model_name}_{junk_size}_{insert_place}.pickle","wb"))
