@@ -2,72 +2,8 @@
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
 
-cuda="7"
+cuda="1"
 num_process=1
-
-
-
-for seq_len in 7000;
-do
-for loc in "first" "last" "halfway" ;
-do
-
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../src/inference_qa_phi3.py \
-    --input_path ../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_${seq_len}_${loc}.pickle \
-    --output_path ../result/phi3_result/syn_Phi-3-mini-128k-instruct_${seq_len}_${loc}.json \
-    --model_name ../download/Phi-3-mini-128k-instruct \
-    --seed 42 \
-    --sample_num 200 \
-    --batch_size 1 \
-    --answer_idx 1 \
-
-done
-done
-
-
-for answer_idx in 1 3 5 7 10 ;
-do
-
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../src/inference_qa_phi3.py \
-    --input_path ../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
-    --output_path ../result/phi3_result/mdqa_10documents_${answer_idx}.json \
-    --model_name ../download/Phi-3-mini-128k-instruct \
-    --seed 42 \
-    --sample_num 200 \
-    --batch_size 4 \
-    --answer_idx $answer_idx \
-
-done
-
-for answer_idx in 1 5 10 15 20 ;
-do
-
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../src/inference_qa_phi3.py \
-    --input_path ../data/mutiqa/generated_data/nq-open-20_total_documents_gold_at_0.jsonl.gz \
-    --output_path ../result/phi3_result/mdqa_10documents_${answer_idx}.json \
-    --model_name ../download/Phi-3-mini-128k-instruct \
-    --seed 42 \
-    --sample_num 200 \
-    --batch_size 2 \
-    --answer_idx $answer_idx \
-
-done
-
-for answer_idx in 1 7 15 23 30 ;
-do
-
-CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../src/inference_qa_phi3.py \
-    --input_path ../data/mutiqa/generated_data/nq-open-30_total_documents_gold_at_0.jsonl.gz \
-    --output_path ../result/phi3_result/mdqa_10documents_${answer_idx}.json \
-    --model_name ../download/Phi-3-mini-128k-instruct \
-    --seed 42 \
-    --sample_num 200 \
-    --batch_size 1 \
-    --answer_idx $answer_idx \
-
-done
-
-
 #baseline
 # for j in 1.3 1.4 1.5 1.6 1.7 ;
 # do
@@ -103,12 +39,20 @@ done
 #     --answer_idx 1 \
 #     --narrow_scale 1.5 \
 #     --boost_scale 1.5
-#syn
 
 
-
-
-
+CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29505 ../src/inference_qa_new.py \
+    --input_path ../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_5.jsonl.gz \
+    --output_path ../result/mdqa_result/mdqa_10documents${i}.json \
+    --model_name lmsys/vicuna-7b-v1.5 \
+    --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"  \
+    --seed 42 \
+    --enable_changed_rope \
+    --sample_num 100 \
+    --batch_size 6 \
+    --answer_idx 5 \
+    --narrow_scale 1 \
+    --boost_scale 1 \
 
 # CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 Ms-PoE/inference_qa.py \
 #     --input_path Ms-PoE/data/mdqa_10documents.jsonl.gz \
