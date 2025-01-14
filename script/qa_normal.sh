@@ -2,7 +2,7 @@
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
 
-cuda="7"
+cuda="4"
 num_process=1
 #baseline
 # for j in 1.3 1.4 1.5 1.6 1.7 ;
@@ -43,16 +43,16 @@ num_process=1
 
 CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 ../src/inference_qa_normal.py \
     --input_path ../data/synthwiki/syn_vicuna-7b-v1.5_3200_random.pickle \
-    --output_path ../result/mdqa_result/mdqa_10documents${i}.json \
+    --output_path /data/wzh/paperproject/Ms/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
     --model_name ../download/vicuna-7b-v1.5-16k \
-    --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"  \
+    --apply_layers "17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"  \
     --seed 42 \
     --enable_changed_rope \
-    --sample_num 4 \
-    --batch_size 4 \
+    --sample_num 200 \
+    --batch_size 1 \
     --answer_idx 1 \
-    --narrow_scale 1.5 \
-    --boost_scale 1.5 \
+    --narrow_scale 1.2 \
+    --boost_scale 0.9 \
 
 # CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29506 Ms-PoE/inference_qa.py \
 #     --input_path Ms-PoE/data/mdqa_10documents.jsonl.gz \

@@ -180,7 +180,7 @@ if __name__ == '__main__':
                     input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True).input_ids.to(model.device)
                 else:
                     input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings).input_ids.to(model.device)
-                input_ids = input_ids.cuda()
+                input_ids = input_ids
                 outputs = model.generate(
                     input_ids=input_ids,
                     max_length=100 + len(input_ids[0]),
@@ -204,7 +204,7 @@ if __name__ == '__main__':
                     responses.append(new_text)
 
         #从所有的设备上搜集数据
-        accelerator.wait_for_everyone()  
+        # accelerator.wait_for_everyone()  
         responses=gather_object(responses)
 
         if accelerator.is_main_process:

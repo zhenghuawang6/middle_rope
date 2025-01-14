@@ -4,3 +4,5 @@
 2024-12-28 17:53:58,127 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：1
 2024-12-28 17:55:39,824 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：25
 2024-12-28 17:55:59,479 - inference_qa_llama3 - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz 正确答案的编号：50
+2024-12-28 18:13:42,709 - eval_qa_response - INFO - Computing metrics
+2024-12-28 18:13:42,718 - eval_qa_response - INFO - best_subspan_em: 1.0

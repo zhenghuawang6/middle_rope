@@ -1,0 +1,24 @@
+2024-12-29 10:09:13,795 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_10000_first.pickle,answer_index:1
+2024-12-29 10:09:44,914 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_10000_last.pickle,answer_index:1
+2024-12-29 10:10:03,682 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_10000_halfway.pickle,answer_index:1
+2024-12-29 10:10:22,578 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_15000_first.pickle,answer_index:1
+2024-12-29 10:10:41,831 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_15000_last.pickle,answer_index:1
+2024-12-29 10:11:00,878 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/synthwiki/generated_data/syn_Phi-3-mini-128k-instruct_15000_halfway.pickle,answer_index:1
+2024-12-29 10:11:19,675 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/mutiqa/generated_data/nq-open-40_total_documents_gold_at_0.jsonl.gz,answer_index:1
+2024-12-29 10:48:18,814 - eval_qa_response - INFO - Computing metrics
+2024-12-29 10:48:18,829 - eval_qa_response - INFO - best_subspan_em: 0.495
+2024-12-29 10:48:27,510 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/mutiqa/generated_data/nq-open-40_total_documents_gold_at_0.jsonl.gz,answer_index:20
+2024-12-29 11:25:14,857 - eval_qa_response - INFO - Computing metrics
+2024-12-29 11:25:14,871 - eval_qa_response - INFO - best_subspan_em: 0.59
+2024-12-29 11:25:23,538 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/mutiqa/generated_data/nq-open-40_total_documents_gold_at_0.jsonl.gz,answer_index:40
+2024-12-29 12:01:53,440 - eval_qa_response - INFO - Computing metrics
+2024-12-29 12:01:53,454 - eval_qa_response - INFO - best_subspan_em: 0.63
+2024-12-29 12:02:02,257 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz,answer_index:1
+2024-12-29 12:45:37,135 - eval_qa_response - INFO - Computing metrics
+2024-12-29 12:45:37,149 - eval_qa_response - INFO - best_subspan_em: 0.515
+2024-12-29 12:45:45,899 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz,answer_index:25
+2024-12-29 13:28:27,230 - eval_qa_response - INFO - Computing metrics
+2024-12-29 13:28:27,244 - eval_qa_response - INFO - best_subspan_em: 0.54
+2024-12-29 13:28:36,603 - inference_qa_phi3 - INFO - model_name:../download/Phi-3-mini-128k-instruct,dataset:../data/mutiqa/generated_data/nq-open-50_total_documents_gold_at_0.jsonl.gz,answer_index:50
+2024-12-29 14:11:03,446 - eval_qa_response - INFO - Computing metrics
+2024-12-29 14:11:03,460 - eval_qa_response - INFO - best_subspan_em: 0.64

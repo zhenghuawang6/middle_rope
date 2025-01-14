@@ -207,7 +207,7 @@ if __name__ == '__main__':
                 # print(input_ids.shape)
                 outputs = model.generate(
                     **tok_inputs,
-                    max_length=200 + len(input_ids[0]),
+                    max_length=100 + len(input_ids[0]),
                     use_cache=True,
                     return_dict_in_generate=False,
                     do_sample=False,

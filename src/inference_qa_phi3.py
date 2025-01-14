@@ -204,8 +204,6 @@ if __name__ == '__main__':
                             )
                         )
                     new_text = text[prompt_length:]
-                    print(new_text)
-                    print("--------------------------------")
                     responses.append(new_text)
 
         #从所有的设备上搜集数据

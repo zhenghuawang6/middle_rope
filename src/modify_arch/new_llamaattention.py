@@ -102,7 +102,7 @@ class NewLlamaAttention(nn.Module):
         key_states = key_states.view(bsz, q_len, -1, self.head_dim).transpose(1, 2)
         value_states = value_states.view(bsz, q_len, -1, self.head_dim).transpose(1, 2)
 
-        position_embeddings = None
+        # position_embeddings = None
         if position_embeddings is None:
             logger.warning_once(
                 "The attention layers in this model are transitioning from computing the RoPE embeddings internally "
@@ -115,6 +115,8 @@ class NewLlamaAttention(nn.Module):
         else:
             cos, sin = position_embeddings
 
+        boost_cos, boost_sin = self.rotary_emb_boost(value_states, position_ids)
+        narrow_cos, narrow_sin = self.rotary_emb_narrow(value_states, position_ids)
         
         boost_query_states, boost_key_states = apply_rotary_pos_emb(query_states, key_states, boost_cos, boost_sin)
         narrow_query_states, narrow_key_states = apply_rotary_pos_emb(query_states, key_states, narrow_cos, narrow_sin)
@@ -157,8 +159,8 @@ class NewLlamaAttention(nn.Module):
         attn_weights = torch.where(location_attention_mask.bool(), boost_attn_weights, narrow_attn_weights) # replace the group attention with neighbor attention within the neighbor window.         
         
         if attention_mask is not None:  # no matter the length, we just slice it
-            causal_mask = attention_mask[:, :, :, : kv_seq_len]
-            attn_weights = attn_weights + attention_mask
+            causal_mask = attention_mask[:, :, :, : key_states.shape[-2]]
+            attn_weights = attn_weights + causal_mask
 
         # upcast attention to fp32
         attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(query_states.dtype)

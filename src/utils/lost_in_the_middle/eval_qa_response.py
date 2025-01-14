@@ -44,14 +44,15 @@ def main(
         )
         print(f"{metric_name}: {average_metric_value}")
         logger.info(f"{metric_name}: {average_metric_value}")
+    return average_metric_value
 
-    if output_path:
-        with xopen(output_path, "w") as f:
-            for (example_metrics, example) in all_example_metrics:
-                example_with_metrics = deepcopy(example)
-                for metric_name, metric_value in example_metrics.items():
-                    example_with_metrics[f"metric_{metric_name}"] = metric_value
-                f.write(json.dumps(example_with_metrics) + "\n")
+    # if output_path:
+    #     with xopen(output_path, "w") as f:
+    #         for (example_metrics, example) in all_example_metrics:
+    #             example_with_metrics = deepcopy(example)
+    #             for metric_name, metric_value in example_metrics.items():
+    #                 example_with_metrics[f"metric_{metric_name}"] = metric_value
+    #             f.write(json.dumps(example_with_metrics) + "\n")
 
 
 def get_metrics_for_example(example):
@@ -69,7 +70,7 @@ def get_metrics_for_example(example):
     return (example_metrics, example)
 
 def evaluate_qa(input_path,output_path,logger):
-    main(input_path,output_path,logger)
+    return main(input_path,output_path,logger)
 
 
 if __name__ == "__main__":

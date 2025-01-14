@@ -1,0 +1,18 @@
++ echo 'Start of the script'
+Start of the script
++ ls -l
+total 36
+-rw-rw-r-- 1 wzh wzh  1953 Nov 28 07:21 baseline.sh
+-rw-rw-r-- 1 wzh wzh  2023 Nov 28 10:17 baselinetest.sh
+-rw-rw-r-- 1 wzh wzh  3114 Nov 28 07:21 ms_poe.sh
+-rw-rw-r-- 1 wzh wzh 12710 Dec  4 12:29 mutilevel_kv.sh
+-rw-rw-r-- 1 wzh wzh    57 Dec 29 05:50 script.log
+-rw-rw-r-- 1 wzh wzh   444 Dec 29 05:49 test.sh
++ pwd
+/data/wzh/paperproject/Ms/middle_rope/script/fuben
++ date
+Sun Dec 29 05:50:10 AM UTC 2024
++ echo 'End of the script'
+End of the script
+test.sh: line 15: unexpected EOF while looking for matching `"'
+test.sh: line 18: syntax error: unexpected end of file
