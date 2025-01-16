@@ -15,13 +15,6 @@ logger = logging.getLogger(__file__)
 
 
 class Individual(object):
-    """
-    Represents an individual in a genetic algorithm population.
-    
-    Args:
-        factors (np.ndarray): The LongRoPE rescale factors.
-        ppl (float): Perplexity as the performance measure of the individual.
-    """
     #如果后面以及前面的性能都有提升则有提升
     def __init__(self, points: list, scores: list = None):
         self.points = points
@@ -31,7 +24,7 @@ class Individual(object):
         return np.allclose(self.points, other.points)
 
     def __str__(self):
-        return f'{self.points.tolist()} => {self.ppl}'
+        return f'{self.points.tolist()} => {self.scores}'
 
 
 class Evaluator(object):
@@ -58,22 +51,35 @@ class Evaluator(object):
                     script_args += f'--{key} '
             else:
                 script_args += f'--{key} {value} '
+        #执行脚本，在search.py中创建，每创建一个evaluator，首先启动一个进程，该进程连接相应的地址（connect函数），然后evalutor接受（accept）
         self.process = subprocess.Popen(f'{env_str} python {script_path} {script_args}', shell=True)
         self.conn, self.addr = sock.accept()
         logger.info(f'Evaluator [addr={self.addr}, device={self.device_str}] connected ')
 
+    """
+    初始化所有的脚本进程
+    """
     def model_ready(self):
         assert json.loads(self.conn.recv(self.buf_size).decode())['model_ready']
         logger.info(f'Evaluator [addr={self.addr}, device={self.device_str}] model loaded')
 
+    """
+    给评价脚本设置进程
+    """
     def set_points(self, points: list):
         self.conn.send(json.dumps({'points': points}).encode())
 
+    """
+    等待评价脚本返回相关的结果
+    """
     def get_result(self) -> float:
         result = json.loads(self.conn.recv(self.buf_size).decode())['result']
         logger.debug(f'Evaluator [addr={self.addr}, device={self.device_str}] result={result}')
         return result
 
+    """
+    通知所有的评价脚本，搜索算法已经结束
+    """
     def finalize(self):
         self.conn.send(json.dumps({'finalize': True}).encode())
         self.conn.close()
@@ -93,7 +99,7 @@ class EvaluatorQueue(object):
         self.evaluators = evaluators
         self.indvs: list[Individual] = []
 
-    def push(self, indv: Individual, points: list):
+    def push(self, indv: Individual):
         """
         Pushes an individual to the queue and sets the rope arguments for the corresponding evaluator.
 
@@ -103,7 +109,7 @@ class EvaluatorQueue(object):
         """
         idx = len(self.indvs)
         self.indvs.append(indv)
-        self.evaluators[idx].set_points(points)
+        self.evaluators[idx].set_points(indv.points)
         if len(self.indvs) >= len(self.evaluators):
             self.join()
 
@@ -160,12 +166,6 @@ class GeneticAlgorithm:
         self.log_json_path = log_json_path
         self.output_dir = output_dir
 
-    # def preprocess_init_factors(self, factors: np.ndarray) -> np.ndarray:
-    #     return factors
-
-    # def extract_factors(self, factors: np.ndarray) -> np.ndarray:
-    #     return factors
-
     def make_indv(self, points: np.ndarray) -> Individual:
         """
         Creates a new individual with the given factors.
@@ -207,13 +207,12 @@ class GeneticAlgorithm:
                 indent = 4,
             ))
         np.savetxt(
-            os.path.join(self.output_dir, f"result_it{iteration:0>3d}.csv"), population[0].factors,
+            os.path.join(self.output_dir, f"result_it{iteration:0>3d}.csv"), population[0].points,
             delimiter='\n',
         )
 
     def run_genetic_algorithm(self):
         "Main loop of Genetic Algorithm."
-
         if self.recovery is None:
             population = []
             latest_iteration = 0
@@ -227,8 +226,8 @@ class GeneticAlgorithm:
 
                 population.append(new_indv)
                 self.history.append(new_indv)
-                if new_indv.ppl is not None:
-                    pbar.set_postfix(last_ppl=new_indv.ppl)
+                if new_indv.scores is not None:
+                    pbar.set_postfix(last_score=new_indv.scores[1])
                 logger.debug(f'[Population #{i:0>3d}] {new_indv}')
         else:
             logger.info(f"Recover from {self.recovery}")
@@ -245,19 +244,19 @@ class GeneticAlgorithm:
         logger.debug(f"Iteration #{latest_iteration}\nPopulation:\n{population_str}")
         logger.info("Start Evolution Search")
 
-        best_indv = Individual(None, np.inf)
+        best_indv = Individual(None, [-1, -1])
         best_score_records = []
 
         for i in range(latest_iteration, latest_iteration + self.max_time_budget):
+            #根据末尾分数 选择一部分个体作为父代
             parents = sorted(population, key=lambda x: x.scores[1])[:self.parents_size]
             self.log(i, parents)
-
             current_best_indv = parents[0]
             best_score_records.append(current_best_indv.scores)
 
             logger.info(f"[Iter #{i + 1:0>3d} Best] {current_best_indv}")
 
-            if current_best_indv.score[1] < best_indv.score[1]:
+            if current_best_indv.scores[1] < best_indv.scores[1]:
                 best_indv = current_best_indv
 
             population = parents
@@ -293,4 +292,4 @@ class GeneticAlgorithm:
         final_population = sorted(population, key=lambda x: x.scores[1])[:self.parents_size]
         self.log(i, final_population)
         logger.info(f"PPL curve: {best_score_records}")
-        return final_population[0].factors
+        return final_population[0].points

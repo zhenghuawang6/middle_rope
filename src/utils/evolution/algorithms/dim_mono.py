@@ -24,7 +24,7 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
                 cur_y = new_points[dim][1]
                 if np.random.rand() < 0.3:
                     if dim == 0:
-                        x_evo_list_curr = np.arange(1.0, new_points[dim + 1][0], list_step)
+                        x_evo_list_curr = np.arange(0.0, new_points[dim + 1][0], list_step)
                         y_evo_list_curr = np.arange(max(y_min, cur_y-area_size),min(y_max,cur_y+area_size),list_step)
                     elif dim == new_points.shape[0] - 1:
                         x_evo_list_curr = np.arange(new_points[dim - 1][0], new_points[dim + 1][0], list_step)

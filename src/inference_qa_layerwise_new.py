@@ -178,22 +178,23 @@ if __name__ == '__main__':
         prompts = prompts[-args.sample_num:]
         examples = examples[-args.sample_num:]
         all_model_documents = all_model_documents[-args.sample_num:]
-
-    ## 贝塞尔曲线
-    layer_num = config.num_hidden_layers
-    t = torch.linspace(0,1,layer_num)
-    layer_ids = torch.range(start=0,end=32).to(torch.int)
-    layer_scales = []
-    #规定四个点
-    points = np.array([[0,1],[10,2],[20,1.5],[31,1]])
-    Bezier_result = Bezier(t,points)
-    for point in Bezier_result:
-        layer_scales.append(point[1].item())
-    
-    # print(f"每层的scale为{layer_scales}")
-    
-    #得到每层的scale后进行赋值
-    model.replace_position_embeddings(layer_ids,layer_scales)
+        
+    if args.enable_changed_rope:
+        # 贝塞尔曲线
+        layer_num = config.num_hidden_layers
+        t = torch.linspace(0,1,layer_num)
+        layer_ids = torch.range(start=0,end=32).to(torch.int)
+        layer_scales = []
+        # 规定四个点
+        points = np.array([[0,1],[10,2],[20,1.5],[31,1]])
+        Bezier_result = Bezier(t,points)
+        for point in Bezier_result:
+            layer_scales.append(point[1].item())
+        
+        # print(f"每层的scale为{layer_scales}")
+        
+        #得到每层的scale后进行赋值
+        model.replace_position_embeddings(layer_ids,layer_scales)
 
     # print("进行推理。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。")
     responses = []
