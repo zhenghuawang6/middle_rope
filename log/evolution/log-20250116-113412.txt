@@ -1,0 +1,27 @@
+[01-16 11:34 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Initialize server on host=127.0.0.1, port=49073
+
+[01-16 11:34 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 34662), device=0] connected 
+
+[01-16 11:35 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 34662), device=0] model loaded
+
+[01-16 11:35 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Loading model config: lmsys/vicuna-7b-v1.5
+
+[01-16 11:35 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Load hyper-parameters from /data/wangzh/middle_rope/script/../src/utils/evolution/default_hyper_params/dim_mono.json
+
+[01-16 11:37 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Start Evolution Search
+
+[01-16 11:37 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #001 Best] [[0, 1.5], [10, 1.5], [20, 1.5], [30, 1.5]] => [0.25, 0.5]
+
+[01-16 11:39 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #002 Best] [[0, 1.5], [10, 1.5], [20, 1.5], [30, 1.5]] => [0.25, 0.5]
+
+[01-16 11:42 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+PPL curve: [[0.25, 0.5], [0.25, 0.5]]
+

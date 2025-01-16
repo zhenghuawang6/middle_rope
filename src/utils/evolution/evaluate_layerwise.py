@@ -5,6 +5,7 @@ import math
 import torch
 import logging
 import sys
+sys.path.append("/data/wangzh/middle_rope/src")
 import warnings
 import pickle
 import argparse
@@ -174,7 +175,7 @@ def commpute_metric(model, tokenizer, config, examples, prompts, args):
 def main(args):
     buf_size = 4096
     sock = socket.socket()
-    sock.connect((args.host, args.port))
+    sock.connect((args.host, int(args.port)))
     logger.info(f'Connected to Server [host={args.host}, port={args.port}]')
 
     #初始化模型
@@ -225,7 +226,7 @@ if __name__ == '__main__':
     parser.add_argument("--sample_num", type=int, default=10)
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--host", type=str, default=None)
-    parser.add_argument("--port", type=str, default=None)
+    parser.add_argument("--port", type=int, default=None)
     args = parser.parse_args()
     args.enable_changed_rope = True
     args.apply_layers = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"
@@ -233,6 +234,7 @@ if __name__ == '__main__':
     logger = logging.getLogger(__name__)
 
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    main(args)
 
     
 

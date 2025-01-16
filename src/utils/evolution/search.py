@@ -59,11 +59,11 @@ def main(args):
     for evaluator in evaluators:
         evaluator.model_ready()
 
-    logger.info(f"Loading model config: {args.model}")
+    logger.info(f"Loading model config: {args.model_name}")
     set_seed()
 
     if args.hyper_params is None:
-        hyper_params_path = os.path.join(os.path.split(__file__)[0], 'default_hyper_params', f'{args.algorithm}.json')
+        hyper_params_path = os.path.join(os.path.split(__file__)[0], 'default_hyper_params', 'dim_mono.json')
     else:
         hyper_params_path = args.hyper_params
 
@@ -104,6 +104,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=None)
     parser.add_argument("--hyper-params", type=str, default=None)
     parser.add_argument("--recovery", type=str, default=None)
+    parser.add_argument("--output_dir", type=str, default=None)
 
     args = parser.parse_args()
     args.timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")

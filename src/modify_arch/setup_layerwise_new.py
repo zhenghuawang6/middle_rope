@@ -18,6 +18,7 @@ class LayerwiseLlamaForCausalLM(LlamaForCausalLM):
             setattr(self.model.layers[layer_id].self_attn, "rotary_emb", modify_position_embedding)
 
 def setup_models_layerwise(args):
+    args.cache_dir = None
     config = AutoConfig.from_pretrained(args.model_name, cache_dir=args.cache_dir)
     config._attn_implementation = "eager"
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False,padding_side='left')
@@ -25,8 +26,8 @@ def setup_models_layerwise(args):
         tokenizer.add_special_tokens({'pad_token': '<custom_pad>'})
     if args.enable_changed_rope:
         config.apply_layers = list(int(x) for x in args.apply_layers.split(','))
-        model = LayerwiseLlamaForCausalLM.from_pretrained(args.model_name, cache_dir=args.cache_dir, config=config,torch_dtype=torch.float32)
+        model = LayerwiseLlamaForCausalLM.from_pretrained(args.model_name, cache_dir=args.cache_dir, config=config,torch_dtype=torch.bfloat16)
     else:
-        model = AutoModelForCausalLM.from_pretrained(args.model_name, cache_dir=args.cache_dir, torch_dtype=torch.float32)
+        model = AutoModelForCausalLM.from_pretrained(args.model_name, cache_dir=args.cache_dir, torch_dtype=torch.bfloat16)
     model.resize_token_embeddings(len(tokenizer))
     return config, tokenizer, model.eval().cuda()

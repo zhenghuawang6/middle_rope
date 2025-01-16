@@ -24,7 +24,7 @@ class Individual(object):
         return np.allclose(self.points, other.points)
 
     def __str__(self):
-        return f'{self.points.tolist()} => {self.scores}'
+        return f'{self.points} => {self.scores}'
 
 
 class Evaluator(object):
@@ -67,7 +67,9 @@ class Evaluator(object):
     给评价脚本设置进程
     """
     def set_points(self, points: list):
+        print(json.dumps({'points': points}))
         self.conn.send(json.dumps({'points': points}).encode())
+        
 
     """
     等待评价脚本返回相关的结果
@@ -213,13 +215,14 @@ class GeneticAlgorithm:
 
     def run_genetic_algorithm(self):
         "Main loop of Genetic Algorithm."
+        print("starting。。。。。。。。。。。。。。。")
         if self.recovery is None:
             population = []
             latest_iteration = 0
             pbar = tqdm(range(self.population_size), desc=f'Generate Initial Population')
+            indv = self.make_indv(self.init_points)
             for i in pbar:
                 if i == 0:
-                    indv = self.make_indv(self.init_points)
                     new_indv = indv
                 else:
                     new_indv = self.mutate(indv)
@@ -291,5 +294,5 @@ class GeneticAlgorithm:
 
         final_population = sorted(population, key=lambda x: x.scores[1])[:self.parents_size]
         self.log(i, final_population)
-        logger.info(f"PPL curve: {best_score_records}")
+        logger.info(f"score curve: {best_score_records}")
         return final_population[0].points

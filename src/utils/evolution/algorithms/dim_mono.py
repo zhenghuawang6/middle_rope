@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 import logging
 import numpy as np
+from copy import deepcopy
 from evolution.algorithms import GeneticAlgorithm, Individual
 
 
@@ -14,7 +15,7 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
         list_step = self.list_step
         # evo_list = np.arange(1.0, 1.0 + self.scale + list_step, list_step)
         new_points = indv.points
-        new_points = new_points.copy()
+        new_points = deepcopy(new_points)
         y_max=2.5
         y_min=1
         area_size = 0.2
@@ -26,14 +27,14 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
                     if dim == 0:
                         x_evo_list_curr = np.arange(0.0, new_points[dim + 1][0], list_step)
                         y_evo_list_curr = np.arange(max(y_min, cur_y-area_size),min(y_max,cur_y+area_size),list_step)
-                    elif dim == new_points.shape[0] - 1:
-                        x_evo_list_curr = np.arange(new_points[dim - 1][0], new_points[dim + 1][0], list_step)
-                        y_evo_list_curr = np.arange(max(y_min, cur_y-area_size),min(y_max,cur_y+area_size),list_step)
-                    else:
+                    elif dim == len(new_points) - 1:
                         x_evo_list_curr = np.arange(new_points[dim - 1][0], cur_x+area_size, list_step)
                         y_evo_list_curr = np.arange(max(y_min, cur_y-area_size),min(y_max,cur_y+area_size),list_step)
+                    else:
+                        x_evo_list_curr = np.arange(new_points[dim - 1][0], new_points[dim + 1][0], list_step)
+                        y_evo_list_curr = np.arange(max(y_min, cur_y-area_size),min(y_max,cur_y+area_size),list_step)
 
-                    if x_evo_list_curr.shape[0] > 0:
+                    if len(x_evo_list_curr) > 0:
                         x_layer_index = np.random.randint(0, x_evo_list_curr.shape[0])
                         y_layer_index = np.random.randint(0, y_evo_list_curr.shape[0])
                         new_points[dim][0] = x_evo_list_curr[x_layer_index]
@@ -44,8 +45,8 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
         return indv
 
     def crossover(self, indv_1: Individual, indv_2: Individual) -> Individual:
-        par_points_1 = indv_1.points
-        par_points_2 = indv_2.points
+        par_points_1 = deepcopy(indv_1.points)
+        par_points_2 = deepcopy(indv_2.points)
         if np.allclose(par_points_1, par_points_2):
             return None
         new_points = par_points_1.copy()
@@ -67,3 +68,4 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
                     self.history.append(indv)
                     return indv
         return None
+    
