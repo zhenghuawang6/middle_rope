@@ -1,6 +1,6 @@
-cuda="0,1,2"
+cuda="0,2,3"
 num_pro=3
-for answer_idx in 5 7 10;
+for answer_idx in 1 5 10;
 do
 CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise_new.py \
     --input_path ../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \

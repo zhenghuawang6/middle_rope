@@ -187,7 +187,7 @@ if __name__ == '__main__':
         layer_scales = []
         # 规定四个点
         # points = np.array([[4.95,1.3],[11.6,1.55],[20.65,1.5],[21.65,1.15]])
-        points = np.array([[7.15,1.45],[11.60,1.45],[20.65,1.5],[21.8,1.15]])
+        points = np.array([[2.25,1.35],[7.5,1.75],[10.9,1.35],[18.2,1.05]])
         Bezier_result = Bezier(t,points)
         for point in Bezier_result:
             layer_scales.append(point[1].item())
