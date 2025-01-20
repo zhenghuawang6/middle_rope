@@ -34,7 +34,9 @@ def main(args):
     host, port = sock.getsockname()
     logger.info(f'Initialize server on host={host}, port={port}')
 
-    device_list = list(range(torch.cuda.device_count()))
+    # device_list = list(range(torch.cuda.device_count()))
+    device_list = [0,2,3]
+
     evaluators: list[Evaluator] = []
     sock.listen(len(device_list))
 

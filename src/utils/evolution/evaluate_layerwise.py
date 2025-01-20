@@ -187,6 +187,7 @@ def main(args):
     end_prompts, end_examples, _ = get_prompt_data(args)
     #发送准备好的数据
     sock.send(json.dumps({'model_ready': True}).encode())
+    layer_ids = list(int(x) for x in args.apply_layers.split(','))
 
     while True:
         msg: dict = json.loads(sock.recv(buf_size).decode())
@@ -196,9 +197,9 @@ def main(args):
         # 传过来对应的points
         points: list = msg['points']
         # 贝塞尔曲线
-        layer_num = config.num_hidden_layers
+        layer_num = len(layer_ids)
         t = torch.linspace(0,1,layer_num)
-        layer_ids = torch.range(start=0,end=32).to(torch.int)
+        # layer_ids = torch.range(start=0,end=32).to(torch.int)
         layer_scales = []
         # 规定四个点
         points = np.array(points)
@@ -230,7 +231,7 @@ if __name__ == '__main__':
     parser.add_argument("--port", type=int, default=None)
     args = parser.parse_args()
     args.enable_changed_rope = True
-    args.apply_layers = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"
+    args.apply_layers = "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"
 
     logger = logging.getLogger(__name__)
 
