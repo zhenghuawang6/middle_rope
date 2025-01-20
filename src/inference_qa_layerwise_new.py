@@ -186,7 +186,8 @@ if __name__ == '__main__':
         layer_ids = torch.range(start=0,end=32).to(torch.int)
         layer_scales = []
         # 规定四个点
-        points = np.array([[0,1],[10,2],[20,1.5],[31,1]])
+        # points = np.array([[4.95,1.3],[11.6,1.55],[20.65,1.5],[21.65,1.15]])
+        points = np.array([[7.15,1.45],[11.60,1.45],[20.65,1.5],[21.8,1.15]])
         Bezier_result = Bezier(t,points)
         for point in Bezier_result:
             layer_scales.append(point[1].item())

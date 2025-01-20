@@ -1,0 +1,17 @@
+2025-01-20 04:05:51,061 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq_10_search_data.jsonl.gz 正确答案的编号：1
+2025-01-20 04:09:51,334 - eval_qa_response - INFO - Computing metrics
+2025-01-20 04:09:51,363 - eval_qa_response - INFO - best_subspan_em: 0.3665594855305466
+2025-01-20 04:10:06,114 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq_10_search_data.jsonl.gz 正确答案的编号：3
+2025-01-20 04:14:13,449 - eval_qa_response - INFO - Computing metrics
+2025-01-20 04:14:13,481 - eval_qa_response - INFO - best_subspan_em: 0.3729903536977492
+2025-01-20 04:14:28,571 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq_10_search_data.jsonl.gz 正确答案的编号：5
+2025-01-20 04:17:52,327 - eval_qa_response - INFO - Computing metrics
+2025-01-20 04:17:52,357 - eval_qa_response - INFO - best_subspan_em: 0.3408360128617363
+2025-01-20 04:18:07,474 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq_10_search_data.jsonl.gz 正确答案的编号：7
+2025-01-20 04:19:29,149 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz 正确答案的编号：1
+2025-01-20 04:24:43,282 - eval_qa_response - INFO - Computing metrics
+2025-01-20 04:24:43,326 - eval_qa_response - INFO - best_subspan_em: 0.598
+2025-01-20 04:24:58,370 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz 正确答案的编号：3
+2025-01-20 04:31:28,347 - eval_qa_response - INFO - Computing metrics
+2025-01-20 04:31:28,394 - eval_qa_response - INFO - best_subspan_em: 0.586
+2025-01-20 04:31:45,404 - inference_qa_new - INFO - 输入文件：../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz 正确答案的编号：5

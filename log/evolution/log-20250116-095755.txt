@@ -1,4 +1,4 @@
-[01-16 09:57 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+d[01-16 09:57 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
 Initialize server on host=127.0.0.1, port=48485
 
 [01-16 09:58 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]

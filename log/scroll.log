@@ -1,0 +1,124 @@
+[01-20 12:14 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:14 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->summ_screen_fd
+{'rouge/rouge1': 30.8774, 'rouge/rouge2': 5.3097, 'rouge/rougeL': 15.7869, 'rouge/rougeLsum': 26.9622, 'rouge/geometric_mean': 13.73, 'num_predicted': 20, 'mean_prediction_length_characters': 665.95, 'zero_scrolls_score': 13.73, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [30.8774, 5.3097, 15.7869]}
+
+[01-20 12:14 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->qasper
+{'f1': 13.479, 'num_predicted': 28, 'mean_prediction_length_characters': 337.75, 'zero_scrolls_score': 13.479, 'display_keys': ['f1'], 'display': [13.479]}
+
+[01-20 12:14 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->qmsum
+{'rouge/rouge1': 28.7899, 'rouge/rouge2': 7.2243, 'rouge/rougeL': 19.2367, 'rouge/rougeLsum': 24.5369, 'rouge/geometric_mean': 15.8753, 'num_predicted': 20, 'mean_prediction_length_characters': 444.95, 'zero_scrolls_score': 15.8753, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [28.7899, 7.2243, 19.2367]}
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->narrative_qa
+{'f1': 10.2924, 'num_predicted': 20, 'mean_prediction_length_characters': 262.2, 'zero_scrolls_score': 10.2924, 'display_keys': ['f1'], 'display': [10.2924]}
+
+[01-20 12:15 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->gov_report
+{'rouge/rouge1': 26.4636, 'rouge/rouge2': 10.4204, 'rouge/rougeL': 15.038, 'rouge/rougeLsum': 24.8516, 'rouge/geometric_mean': 16.066, 'num_predicted': 20, 'mean_prediction_length_characters': 842.75, 'zero_scrolls_score': 16.066, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [26.4636, 10.4204, 15.038]}
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->quality
+{'accuracy': 33.3333, 'num_predicted': 21, 'mean_prediction_length_characters': 271.3333, 'zero_scrolls_score': 33.3333, 'display_keys': ['accuracy'], 'display': [33.3333]}
+
+[01-20 12:15 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->squality
+{'rouge/rouge1': 30.9765, 'rouge/rouge2': 8.0346, 'rouge/rougeL': 17.8936, 'rouge/rougeLsum': 28.558, 'rouge/geometric_mean': 16.4524, 'num_predicted': 80, 'mean_prediction_length_characters': 603.15, 'zero_scrolls_score': 16.4524, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [30.9765, 8.0346, 17.8936]}
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->musique
+{'f1': 10.9961, 'num_predicted': 20, 'mean_prediction_length_characters': 79.15, 'zero_scrolls_score': 10.9961, 'display_keys': ['f1'], 'display': [10.9961]}
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->space_digest
+{'exp_similarity': 45.5012, 'num_predicted': 20, 'mean_prediction_length_characters': 182.1, 'zero_scrolls_score': 45.5012, 'display_keys': ['exp_similarity'], 'display': [45.5012]}
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_7b_chat_hf--------->book_sum_sort
+{'concordance_index': 0.0, 'num_predicted': 20, 'mean_prediction_length_characters': 11.65, 'zero_scrolls_score': 0.0, 'display_keys': ['concordance_index'], 'display': [0.0]}
+
+[01-20 12:15 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:15 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+stabilityai_StableBeluga_7B--------->summ_screen_fd
+{'rouge/rouge1': 26.477, 'rouge/rouge2': 5.1886, 'rouge/rougeL': 14.6695, 'rouge/rougeLsum': 22.6126, 'rouge/geometric_mean': 12.6312, 'num_predicted': 20, 'mean_prediction_length_characters': 445.8, 'zero_scrolls_score': 12.6312, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [26.477, 5.1886, 14.6695]}
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+stabilityai_StableBeluga_7B--------->qasper
+{'f1': 30.5495, 'num_predicted': 28, 'mean_prediction_length_characters': 209.5357, 'zero_scrolls_score': 30.5495, 'display_keys': ['f1'], 'display': [30.5495]}
+
+[01-20 12:16 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+stabilityai_StableBeluga_7B--------->qmsum
+{'rouge/rouge1': 25.4489, 'rouge/rouge2': 5.8775, 'rouge/rougeL': 17.4009, 'rouge/rougeLsum': 22.0083, 'rouge/geometric_mean': 13.7555, 'num_predicted': 20, 'mean_prediction_length_characters': 317.25, 'zero_scrolls_score': 13.7555, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [25.4489, 5.8775, 17.4009]}
+
+[01-20 12:16 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+stabilityai_StableBeluga_7B--------->gov_report
+{'rouge/rouge1': 25.4681, 'rouge/rouge2': 10.455, 'rouge/rougeL': 14.7374, 'rouge/rougeLsum': 23.9639, 'rouge/geometric_mean': 15.773, 'num_predicted': 20, 'mean_prediction_length_characters': 919.8, 'zero_scrolls_score': 15.773, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [25.4681, 10.455, 14.7374]}
+
+[01-20 12:16 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+lmsys_vicuna_7b_v1.5--------->summ_screen_fd
+{'rouge/rouge1': 27.2723, 'rouge/rouge2': 4.8438, 'rouge/rougeL': 15.0105, 'rouge/rougeLsum': 24.3601, 'rouge/geometric_mean': 12.5632, 'num_predicted': 20, 'mean_prediction_length_characters': 566.25, 'zero_scrolls_score': 12.5632, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [27.2723, 4.8438, 15.0105]}
+
+[01-20 12:16 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+lmsys_vicuna_7b_v1.5--------->gov_report
+{'rouge/rouge1': 30.9954, 'rouge/rouge2': 12.8711, 'rouge/rougeL': 17.0603, 'rouge/rougeLsum': 29.2584, 'rouge/geometric_mean': 18.9511, 'num_predicted': 20, 'mean_prediction_length_characters': 1035.9, 'zero_scrolls_score': 18.9511, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [30.9954, 12.8711, 17.0603]}
+
+[01-20 12:16 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_13b_chat_hf--------->summ_screen_fd
+{'rouge/rouge1': 25.0553, 'rouge/rouge2': 3.9853, 'rouge/rougeL': 14.538, 'rouge/rougeLsum': 22.6385, 'rouge/geometric_mean': 11.3229, 'num_predicted': 20, 'mean_prediction_length_characters': 668.75, 'zero_scrolls_score': 11.3229, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [25.0553, 3.9853, 14.538]}
+
+[01-20 12:16 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_13b_chat_hf--------->qasper
+{'f1': 14.0595, 'num_predicted': 28, 'mean_prediction_length_characters': 374.6071, 'zero_scrolls_score': 14.0595, 'display_keys': ['f1'], 'display': [14.0595]}
+
+[01-20 12:17 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:17 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_13b_chat_hf--------->qmsum
+{'rouge/rouge1': 27.6416, 'rouge/rouge2': 5.8769, 'rouge/rougeL': 17.9473, 'rouge/rougeLsum': 23.9543, 'rouge/geometric_mean': 14.2858, 'num_predicted': 20, 'mean_prediction_length_characters': 368.85, 'zero_scrolls_score': 14.2858, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [27.6416, 5.8769, 17.9473]}
+
+[01-20 12:17 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_13b_chat_hf--------->narrative_qa
+{'f1': 12.0044, 'num_predicted': 20, 'mean_prediction_length_characters': 57.7, 'zero_scrolls_score': 12.0044, 'display_keys': ['f1'], 'display': [12.0044]}
+
+[01-20 12:17 | absl | INFO]
+Using default tokenizer.
+
+[01-20 12:17 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_13b_chat_hf--------->gov_report
+{'rouge/rouge1': 28.4759, 'rouge/rouge2': 10.9509, 'rouge/rougeL': 16.1379, 'rouge/rougeLsum': 26.9654, 'rouge/geometric_mean': 17.1366, 'num_predicted': 20, 'mean_prediction_length_characters': 1010.0, 'zero_scrolls_score': 17.1366, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [28.4759, 10.9509, 16.1379]}
+
+[01-20 12:17 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+meta_llama_Llama_2_13b_chat_hf--------->quality
+{'accuracy': 61.9048, 'num_predicted': 21, 'mean_prediction_length_characters': 374.7619, 'zero_scrolls_score': 61.9048, 'display_keys': ['accuracy'], 'display': [61.9048]}
+

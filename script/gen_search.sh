@@ -5,5 +5,6 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python ../src/utils/evolution/search.py \
     --sample_num 500 \
     --batch_size 1 \
     --num_doc 10 \
-    --output_dir ../log/evolution/
+    --output_dir ../log/evolution/ \
+    --recovery /data/wangzh/middle_rope/log/evolution/log-20250117-201355.json
 

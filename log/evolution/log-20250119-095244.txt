@@ -1,0 +1,54 @@
+[01-19 09:52 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Initialize server on host=127.0.0.1, port=34579
+
+[01-19 09:52 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 42370), device=0] connected 
+
+[01-19 09:52 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 42380), device=1] connected 
+
+[01-19 09:53 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 54012), device=2] connected 
+
+[01-19 09:53 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 54024), device=3] connected 
+
+[01-19 09:53 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 42370), device=0] model loaded
+
+[01-19 09:53 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 42380), device=1] model loaded
+
+[01-19 09:53 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 54012), device=2] model loaded
+
+[01-19 09:54 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 54024), device=3] model loaded
+
+[01-19 09:54 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Loading model config: lmsys/vicuna-7b-v1.5
+
+[01-19 09:54 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Load hyper-parameters from /data/wangzh/middle_rope/script/../src/utils/evolution/default_hyper_params/dim_mono.json
+
+[01-19 09:54 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Recover from /data/wangzh/middle_rope/log/evolution/log-20250117-201355.json
+
+[01-19 09:54 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Start Evolution Search
+
+[01-19 09:54 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #015 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-19 11:48 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #016 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-19 13:48 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #017 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-19 15:43 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #018 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-19 17:32 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #019 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+

@@ -208,7 +208,8 @@ def main(args):
             layer_scales.append(point[1].item())
         model.replace_position_embeddings(layer_ids,layer_scales)
 
-        start_score = commpute_metric(model, tokenizer, config, start_examples, start_prompts, args)
+        # start_score = commpute_metric(model, tokenizer, config, start_examples, start_prompts, args)
+        start_score = 0
         end_score = commpute_metric(model, tokenizer, config, end_examples, end_prompts, args)
 
         sock.send(json.dumps({'result': [start_score,end_score]}).encode())

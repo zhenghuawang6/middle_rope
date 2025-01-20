@@ -2,8 +2,8 @@
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
 
-cuda="0"
-num_process=1
+cuda="0,1,2,3"
+num_process=4
 #baseline
 # for j in 1.3 1.4 1.5 1.6 1.7 ;
 # do
@@ -61,11 +61,11 @@ num_process=1
 # done    --input_path ../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
 
 
-for answer_idx in 1 5;
+for answer_idx in 1 3 5 7 10;
 do
 echo 目前处理的answerid为${answer_idx}
 CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_process --main_process_port=29501 ../src/inference_qa_new.py \
-    --input_path ../data/mutiqa/generated_data/nq_10_search_data.jsonl.gz \
+    --input_path ../data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
     --output_path ../result/vicuna-7b-v1.5/mdqa_10documents_${answer_idx}.json \
     --model_name lmsys/vicuna-7b-v1.5 \
     --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31" \

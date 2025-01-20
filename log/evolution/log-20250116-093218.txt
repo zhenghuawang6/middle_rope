@@ -1,9 +1,0 @@
-[01-16 09:32 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
-Initialize server on host=127.0.0.1, port=38809
-
-[01-16 09:32 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
-Evaluator [addr=('127.0.0.1', 54112), device=0] connected 
-
-[01-16 09:33 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
-Evaluator [addr=('127.0.0.1', 54112), device=0] model loaded
-

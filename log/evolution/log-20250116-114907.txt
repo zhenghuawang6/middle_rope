@@ -13,3 +13,21 @@ Evaluator [addr=('127.0.0.1', 43738), device=2] connected
 [01-16 11:49 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
 Evaluator [addr=('127.0.0.1', 54226), device=3] connected 
 
+[01-16 11:50 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 48632), device=0] model loaded
+
+[01-16 11:50 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 43736), device=1] model loaded
+
+[01-16 11:50 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 43738), device=2] model loaded
+
+[01-16 11:50 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 54226), device=3] model loaded
+
+[01-16 11:50 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Loading model config: lmsys/vicuna-7b-v1.5
+
+[01-16 11:50 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Load hyper-parameters from /data/wangzh/middle_rope/script/../src/utils/evolution/default_hyper_params/dim_mono.json
+

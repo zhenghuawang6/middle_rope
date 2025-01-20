@@ -237,9 +237,9 @@ class GeneticAlgorithm:
             with open(self.recovery) as f:
                 data = json.loads(f.read())
             latest_iteration = data['iteration']
-            population = [Individual(np.array(factors), ppl) for factors, ppl in data['population']]
+            population = [Individual(points, scores) for points, scores in data['population']]
             if "history" in data:
-                self.history = [Individual(np.array(factors), ppl) for factors, ppl in data['history']]
+                self.history = [Individual(points, scores) for points, scores in data['history']]
 
         self.queue.join()
 
@@ -251,8 +251,8 @@ class GeneticAlgorithm:
         best_score_records = []
 
         for i in range(latest_iteration, latest_iteration + self.max_time_budget):
-            #根据末尾分数 选择一部分个体作为父代
-            parents = sorted(population, key=lambda x: x.scores[1])[:self.parents_size]
+            #根据末尾分数 选择一部分个体作为父代,分数高的是最好的
+            parents = sorted(population, key=lambda x: -x.scores[1])[:self.parents_size]
             self.log(i, parents)
             current_best_indv = parents[0]
             best_score_records.append(current_best_indv.scores)
@@ -292,7 +292,7 @@ class GeneticAlgorithm:
 
             self.queue.join()
 
-        final_population = sorted(population, key=lambda x: x.scores[1])[:self.parents_size]
+        final_population = sorted(population, key=lambda x: -x.scores[1])[:self.parents_size]
         self.log(i, final_population)
         logger.info(f"score curve: {best_score_records}")
         return final_population[0].points

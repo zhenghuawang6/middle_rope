@@ -168,9 +168,9 @@ if __name__ == '__main__':
             prompt = format_instruct_prompt(prompt)
     #对样本进行了采样
     if len(prompts) > args.sample_num:
-        prompts = prompts[:args.sample_num]
-        examples = examples[:args.sample_num]
-        all_model_documents = all_model_documents[:args.sample_num]
+        prompts = prompts[-args.sample_num:]
+        examples = examples[-args.sample_num:]
+        all_model_documents = all_model_documents[-args.sample_num:]
 
     # accelerator.wait_for_everyone()
   #https://github.com/huggingface/transformers/issues/32086

@@ -6,4 +6,5 @@ CUDA_VISIBLE_DEVICES=0 python ../src/utils/evolution/evaluate_layerwise.py \
     --batch_size 4 \
     --num_doc 10 \
     --host 127.0.0.1 \
-    --port 38947
+    --port 38947 \
+    --recory 

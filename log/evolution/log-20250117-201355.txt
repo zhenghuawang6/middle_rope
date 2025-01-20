@@ -1,0 +1,81 @@
+[01-17 20:13 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Initialize server on host=127.0.0.1, port=39671
+
+[01-17 20:14 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 40040), device=0] connected 
+
+[01-17 20:14 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 40042), device=1] connected 
+
+[01-17 20:14 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 36084), device=2] connected 
+
+[01-17 20:14 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 52642), device=3] connected 
+
+[01-17 20:14 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 40040), device=0] model loaded
+
+[01-17 20:15 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 40042), device=1] model loaded
+
+[01-17 20:15 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 36084), device=2] model loaded
+
+[01-17 20:15 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Evaluator [addr=('127.0.0.1', 52642), device=3] model loaded
+
+[01-17 20:15 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Loading model config: lmsys/vicuna-7b-v1.5
+
+[01-17 20:15 | /data/wangzh/middle_rope/script/../src/utils/evolution/search.py | INFO]
+Load hyper-parameters from /data/wangzh/middle_rope/script/../src/utils/evolution/default_hyper_params/dim_mono.json
+
+[01-17 21:46 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+Start Evolution Search
+
+[01-17 21:46 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #001 Best] [[0, 1.5], [7.800000000000001, 1.6000000000000003], [24.99999999999994, 1.6000000000000003], [30, 1.5]] => [0, 0.5327868852459017]
+
+[01-17 23:14 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #002 Best] [[0, 1.5], [11.8, 1.6000000000000003], [20, 1.5], [30, 1.5]] => [0, 0.5409836065573771]
+
+[01-18 00:44 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #003 Best] [[0, 1.5], [11.8, 1.6000000000000003], [20, 1.5], [30, 1.5]] => [0, 0.5409836065573771]
+
+[01-18 02:33 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #004 Best] [[0, 1.5], [11.8, 1.6000000000000003], [20, 1.5], [30, 1.5]] => [0, 0.5409836065573771]
+
+[01-18 04:19 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #005 Best] [[0, 1.5], [11.8, 1.6000000000000003], [20, 1.5], [30, 1.5]] => [0, 0.5409836065573771]
+
+[01-18 06:08 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #006 Best] [[5.050000000000001, 1.35], [7.800000000000001, 1.6000000000000003], [20.649999999999956, 1.5000000000000002], [21.899999999999974, 1.2500000000000002]] => [0, 0.5573770491803278]
+
+[01-18 07:56 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #007 Best] [[0.1, 1.3000000000000003], [7.800000000000001, 1.6000000000000003], [20.649999999999956, 1.5000000000000002], [21.899999999999974, 1.2500000000000002]] => [0, 0.5819672131147541]
+
+[01-18 09:44 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #008 Best] [[5.2, 1.4500000000000004], [7.800000000000001, 1.6000000000000003], [15.899999999999972, 1.4000000000000004], [21.199999999999964, 1.2500000000000004]] => [0, 0.5983606557377049]
+
+[01-18 11:41 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #009 Best] [[5.2, 1.4500000000000004], [7.800000000000001, 1.6000000000000003], [15.899999999999972, 1.4000000000000004], [21.199999999999964, 1.2500000000000004]] => [0, 0.5983606557377049]
+
+[01-18 13:38 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #010 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-18 15:19 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #011 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-18 17:11 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #012 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-18 19:07 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #013 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-18 21:01 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #014 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
+[01-18 22:47 | /data/wangzh/middle_rope/script/../src/utils/evolution/../evolution/algorithms/genetic_base.py | INFO]
+[Iter #015 Best] [[4.95, 1.3000000000000005], [11.599999999999984, 1.5500000000000005], [20.649999999999956, 1.5000000000000002], [21.64999999999997, 1.1500000000000004]] => [0, 0.6557377049180327]
+
