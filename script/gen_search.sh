@@ -8,15 +8,26 @@
 #     --output_dir ../log/last_500_part_evolution/ \
 #     --cuda_indexs "2,3"
 
+# python ../src/utils/evolution/search.py \
+#     --model_name ../download/Llama-2-7b-chat-hf \
+#     --input_path /data/wangzh/middle_rope/src/utils/PositionalHidden/experiments/NQ/qa_data/20_total_documents/nq-open-20_total_documents_gold_at_19.jsonl.gz \
+#     --output_path ../result/layerwise/evo_mdqa_10documents.json \
+#     --sample_num 100 \
+#     --batch_size 1 \
+#     --num_doc 20 \
+#     --output_dir ../log/20nq_last_100/ \
+#     --cuda_indexs "1,2,3"
+
+
 python ../src/utils/evolution/search.py \
     --model_name ../download/Llama-2-7b-chat-hf \
-    --input_path /data/wangzh/middle_rope/src/utils/PositionalHidden/experiments/NQ/qa_data/20_total_documents/nq-open-20_total_documents_gold_at_19.jsonl.gz \
-    --output_path ../result/layerwise/evo_mdqa_10documents.json \
+    --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/chat_template_llama_2_7b_chat_first_500.jsonl \
+    --output_path ../result/layerwise/chat_llame_mdqa_10documents.json \
     --sample_num 100 \
     --batch_size 1 \
     --num_doc 20 \
-    --output_dir ../log/20nq_last_100/ \
-    --cuda_indexs "1,2,3"
+    --output_dir ../log/llama_7b_chat/nq20_first_100 \
+    --cuda_indexs "1,0,3"
 
 
 

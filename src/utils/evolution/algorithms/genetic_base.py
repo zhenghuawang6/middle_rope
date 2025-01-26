@@ -41,7 +41,7 @@ class Evaluator(object):
 
     def __init__(self, sock: socket.socket, args: dict, device_list: list, buf_size: int = 4096):
         self.buf_size = buf_size
-        script_path = __file__.replace(os.path.join('algorithms', 'genetic_base.py'), 'evaluate_layerwise.py')
+        script_path = __file__.replace(os.path.join('algorithms', 'genetic_base.py'), 'evaluate_layerwise_chat.py')
         self.device_str = ','.join([str(device_idx) for device_idx in device_list])
         env_str = f'CUDA_VISIBLE_DEVICES={self.device_str}'
         script_args = ''
@@ -253,7 +253,7 @@ class GeneticAlgorithm:
         for i in range(latest_iteration, latest_iteration + self.max_time_budget):
             #根据末尾分数 选择一部分个体作为父代,分数高的是最好的
             # parents = sorted(population, key=lambda x: -x.scores[1])[:self.parents_size]
-            parents = sorted(population, key=lambda x: (-x.scores[1],-x.scores[0]))[:self.parents_size]
+            parents = sorted(population, key=lambda x: (-x.scores[1]*1.2-x.scores[0],-x.scores[1],-x.scores[0]))[:self.parents_size]
 
             self.log(i, parents)
             current_best_indv = parents[0]
