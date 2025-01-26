@@ -8,10 +8,8 @@
 
 [submodule "src/utils/LongQLoRA"]
     path = src/utils/LongQLoRA
-    url = https://github.com/yangjianxin1/LongQLoRA.git
+    url = https://github.com/zhenghuawang6/LongQLoRA.git
 
-
-
-# [submodule "src/utils/PositionalHidden"]
-# path = src/utils/PositionalHidden
-# url = https://github.com/PositionalHidden/PositionalHidden.git
+[submodule "src/utils/PositionalHidden"]
+    path = src/utils/PositionalHidden
+    url = https://github.com/zhenghuawang6/PositionalHidden.git

@@ -28,6 +28,7 @@ log/
 script/layerwise_generation
 script/generations
 script/generations_contextlen_3500
+src/utils/PositionalHidden1/
 # utils/__pycache__
 # utils/lost_in_the_middle/__pycache__/
 # utils/modify_arch/__pycache__/
