@@ -1,10 +1,10 @@
 {
     "evo_scale": 1.0,
-    "population_size": 32,
+    "population_size": 18,
     "max_time_budget": 20,
     "mutation_numbers": 16,
     "crossover_size": 16,
-    "max_crossover_try": 20,
-    "parents_size": 16,
+    "max_crossover_try": 4,
+    "parents_size": 12,
     "list_step": 0.05
 }

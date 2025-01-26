@@ -11,12 +11,15 @@ def normalize_answer(s: str) -> str:
     See https://worksheets.codalab.org/rest/bundles/0x6b567e1cf2e041ec80d7098f031c5c9e/contents/blob/
     """
 
+    #去除冠词
     def remove_articles(text):
         return regex.sub(r"\b(a|an|the)\b", " ", text)
 
+    #修正多余的空格
     def white_space_fix(text):
         return " ".join(text.split())
 
+    #去除标点符号
     def remove_punc(text):
         exclude = set(string.punctuation)
         return "".join(ch for ch in text if ch not in exclude)

@@ -252,7 +252,9 @@ class GeneticAlgorithm:
 
         for i in range(latest_iteration, latest_iteration + self.max_time_budget):
             #根据末尾分数 选择一部分个体作为父代,分数高的是最好的
-            parents = sorted(population, key=lambda x: -x.scores[1])[:self.parents_size]
+            # parents = sorted(population, key=lambda x: -x.scores[1])[:self.parents_size]
+            parents = sorted(population, key=lambda x: (-x.scores[1],-x.scores[0]))[:self.parents_size]
+
             self.log(i, parents)
             current_best_indv = parents[0]
             best_score_records.append(current_best_indv.scores)

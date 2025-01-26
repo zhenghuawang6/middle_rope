@@ -20,6 +20,14 @@ utils/lost_in_the_middle/result_test.log
 utils/lost_in_the_middle/result_softmax.log
 utils/lost_in_the_middle/kv_result.log
 results/
+script/generations/
+script/layerwise_generation/
+src/utils/zero_scrolls/
+ori_result/
+log/
+script/layerwise_generation
+script/generations
+script/generations_contextlen_3500
 # utils/__pycache__
 # utils/lost_in_the_middle/__pycache__/
 # utils/modify_arch/__pycache__/

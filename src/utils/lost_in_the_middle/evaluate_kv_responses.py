@@ -37,6 +37,7 @@ def main(input_path, output_path):
             example_metrics[metric_name] for (example_metrics, _) in all_example_metrics
         )
         logger.info(f"{metric_name}: {average_metric_value}")
+        print(f"{metric_name}: {average_metric_value}")
 
     if output_path:
         with xopen(output_path, "w") as f:
@@ -46,14 +47,17 @@ def main(input_path, output_path):
                     example_with_metrics[f"metric_{metric_name}"] = metric_value
                 f.write(json.dumps(example_with_metrics) + "\n")
 
+def evaluate_kv(input_path, output_path):
+    main(input_path, output_path)
 
 if __name__ == "__main__":
-    logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filemode="a", filename="/data/wzh/paperproject/Ms/Ms-PoE/utils/lost_in_the_middle/kv_result.log")
+    logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filemode="a")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input-path", help="Path to data with model predictions and answers.", required=True)
+    parser.add_argument("--input-path", help="Path to data with model predictions and answers.", default="/data/wangzh/middle_rope/result/layerwise/mdqa_10documents_50.json")
     parser.add_argument(
         "--output-path",
         help="Path to write data with model predictions, answers, and scores.",
+        default=None
     )
     args = parser.parse_args()
     logger.info("running %s", " ".join(sys.argv))

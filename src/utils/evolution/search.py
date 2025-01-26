@@ -34,7 +34,9 @@ def main(args):
     host, port = sock.getsockname()
     logger.info(f'Initialize server on host={host}, port={port}')
 
-    device_list = list(range(torch.cuda.device_count()))
+    # device_list = list(range(torch.cuda.device_count()))
+    device_list=args.cuda_indexs.split(",")
+
     evaluators: list[Evaluator] = []
     sock.listen(len(device_list))
 
@@ -105,6 +107,7 @@ if __name__ == "__main__":
     parser.add_argument("--hyper-params", type=str, default=None)
     parser.add_argument("--recovery", type=str, default=None)
     parser.add_argument("--output_dir", type=str, default=None)
+    parser.add_argument("--cuda_indexs", type=str, default=None)
 
     args = parser.parse_args()
     args.timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")

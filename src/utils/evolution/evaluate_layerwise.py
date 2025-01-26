@@ -43,6 +43,33 @@ def format_instruct_prompt(instruction):
     )
     return PROMPT_FOR_GENERATION
 
+def format_chat_prompt(input,model_path,tokenizer):
+    model_path=model_path.lower()
+
+    if "mpt-7b-8k-instruct" in model_path:
+        def format_prompt(instruction):
+            template = "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n###Instruction\n{instruction}\n\n### Response\n"
+            return template.format(instruction=instruction)
+        prompt = format_prompt(input)
+
+    elif "longchat" in model_path or "vicuna" in model_path:
+        from fastchat.model import get_conversation_template
+        conv = get_conversation_template("vicuna")
+        conv.append_message(conv.roles[0], input)
+        conv.append_message(conv.roles[1], None)
+        prompt = conv.get_prompt()
+
+    else:
+        messages=[{"role":"user","content":input}]
+        chat_template = tokenizer.chat_template
+        if chat_template is None:
+            import warnings
+            warnings.warn("chat_template is None, return the original input")
+            return input
+
+        prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+    return prompt
 
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
@@ -88,8 +115,9 @@ def get_prompt_data(args):
                         query_aware_contextualization=False,
                         answer_idx=args.answer_idx
                     )
-                    if "instruct" in args.model_name:
-                        prompt = format_instruct_prompt(prompt)
+                    # if "instruct" in args.model_name:
+                    #     prompt = format_instruct_prompt(prompt)
+                    prompt=format_chat_prompt(prompt,args.model_name,tokenizer=args.tokenizer)
                     prompts.append(prompt)
                     examples.append(deepcopy(input_example))
                     all_model_documents.append(documents)
@@ -180,6 +208,7 @@ def main(args):
 
     #初始化模型
     config, tokenizer, model = setup_models_layerwise(args)
+    args.tokenizer = tokenizer
     #初始化数据,通过answer_index获取数据
     args.answer_idx = 1
     start_prompts, start_examples, _ = get_prompt_data(args)
@@ -187,6 +216,7 @@ def main(args):
     end_prompts, end_examples, _ = get_prompt_data(args)
     #发送准备好的数据
     sock.send(json.dumps({'model_ready': True}).encode())
+    layer_ids = list(int(x) for x in args.apply_layers.split(','))
 
     while True:
         msg: dict = json.loads(sock.recv(buf_size).decode())
@@ -196,9 +226,9 @@ def main(args):
         # 传过来对应的points
         points: list = msg['points']
         # 贝塞尔曲线
-        layer_num = config.num_hidden_layers
+        layer_num = len(layer_ids)
         t = torch.linspace(0,1,layer_num)
-        layer_ids = torch.range(start=0,end=32).to(torch.int)
+        # layer_ids = torch.range(start=0,end=32).to(torch.int)
         layer_scales = []
         # 规定四个点
         points = np.array(points)
@@ -208,8 +238,8 @@ def main(args):
             layer_scales.append(point[1].item())
         model.replace_position_embeddings(layer_ids,layer_scales)
 
-        # start_score = commpute_metric(model, tokenizer, config, start_examples, start_prompts, args)
-        start_score = 0
+        start_score = commpute_metric(model, tokenizer, config, start_examples, start_prompts, args)
+        # start_score = 0
         end_score = commpute_metric(model, tokenizer, config, end_examples, end_prompts, args)
 
         sock.send(json.dumps({'result': [start_score,end_score]}).encode())
@@ -230,7 +260,7 @@ if __name__ == '__main__':
     parser.add_argument("--port", type=int, default=None)
     args = parser.parse_args()
     args.enable_changed_rope = True
-    args.apply_layers = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"
+    args.apply_layers = "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31"
 
     logger = logging.getLogger(__name__)
 

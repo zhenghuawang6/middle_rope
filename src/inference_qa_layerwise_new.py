@@ -32,9 +32,12 @@ from utils.lost_in_the_middle.prompting import (
     get_qa_prompt,
     get_qa_prompt_index,
     get_qa_prompt_only_true_index,
-    get_synthwiki_qa_prompt
+    get_synthwiki_qa_prompt,
+    get_kv_retrieval_prompt
 )
 from utils.lost_in_the_middle.eval_qa_response import evaluate_qa
+from utils.lost_in_the_middle.evaluate_kv_responses import evaluate_kv
+from utils.synthwiki.evaluate_synthwiki import evaluate_syn
 from modify_arch.setup_layerwise_new import setup_models_layerwise
 
 def set_seed(args):
@@ -74,6 +77,36 @@ def format_instruct_prompt(instruction):
     )
     return PROMPT_FOR_GENERATION
 
+
+def format_chat_prompt(input,model_path,tokenizer):
+    model_path=model_path.lower()
+
+    if "mpt-7b-8k-instruct" in model_path:
+        def format_prompt(instruction):
+            template = "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n###Instruction\n{instruction}\n\n### Response\n"
+            return template.format(instruction=instruction)
+        prompt = format_prompt(input)
+
+    elif "longchat" in model_path or "vicuna" in model_path:
+        from fastchat.model import get_conversation_template
+        conv = get_conversation_template("vicuna")
+        conv.append_message(conv.roles[0], input)
+        conv.append_message(conv.roles[1], None)
+        prompt = conv.get_prompt()
+
+    else:
+        messages=[{"role":"user","content":input}]
+        chat_template = tokenizer.chat_template
+        if chat_template is None:
+            import warnings
+            warnings.warn("chat_template is None, return the original input")
+            return input
+
+        prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+    return prompt
+
+
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
@@ -96,8 +129,10 @@ if __name__ == '__main__':
     parser.add_argument("--sample_num", type=int, default=10)
     parser.add_argument("--answer_idx", type=int, default=0)
     parser.add_argument("--batch_size", type=int, default=2)
+    parser.add_argument("--dataset", type=str, default="nq")
     args = parser.parse_args()
     #创建日志文件
+    print(f"model:{args.model_name}\nanswer_index:{args.answer_idx}\ndataset:{args.dataset}\ninput_path{args.input_path}")
     commit_hash_id =  get_git_commit_hash()
     logging_filename = f"../log/layerwise/{commit_hash_id}_result.log"
     directory = os.path.dirname(logging_filename)
@@ -123,7 +158,7 @@ if __name__ == '__main__':
     examples = []
     prompts = []
     all_model_documents = []
-    if "pickle" not in args.input_path:
+    if args.dataset=="nq":
         with xopen(args.input_path, 'r') as f:
             for line in f:
                 if line.strip() != '':
@@ -150,12 +185,13 @@ if __name__ == '__main__':
                             query_aware_contextualization=False,
                             answer_idx=args.answer_idx
                         )
-                    if "instruct" in args.model_name:
-                        prompt = format_instruct_prompt(prompt)
+                    # if "instruct" in args.model_name:
+                    #     prompt = format_instruct_prompt(prompt)
+                    prompt = format_chat_prompt(prompt,args.model_name,tokenizer)
                     prompts.append(prompt)
                     examples.append(deepcopy(input_example))
                     all_model_documents.append(documents)
-    else:
+    elif args.dataset=="syn":
         synthwiki_data = pickle.load(open(args.input_path,"rb"))
         for single_data in synthwiki_data:
             question = single_data["question"]
@@ -172,27 +208,92 @@ if __name__ == '__main__':
             examples.append(deepcopy(single_data))
             all_model_documents.append(documents)
         
+    else:
+        with xopen(args.input_path, 'r') as fin:
+            for line in tqdm(fin):
+                input_example = json.loads(line)
+                # Get the prediction for the input example
+                ordered_kv_records = deepcopy(input_example["ordered_kv_records"])
+                key = input_example["key"]
+                value = input_example["value"]
+                original_kv_index = ordered_kv_records.index([key, value])
+                # Remove the kv to retrieve from its original index
+                original_kv = ordered_kv_records.pop(original_kv_index)
+                # Insert it at the specified gold index
+                ordered_kv_records.insert(args.answer_idx, original_kv)
+                kv_prompt = get_kv_retrieval_prompt(
+                    data=ordered_kv_records, key=key, query_aware_contextualization=False
+                )
+                prompts.append(kv_prompt)
+                examples.append(deepcopy(input_example))
+                all_model_documents.append(ordered_kv_records)
 
     #对样本进行了采样
     if len(prompts) > args.sample_num:
-        prompts = prompts[-args.sample_num:]
-        examples = examples[-args.sample_num:]
-        all_model_documents = all_model_documents[-args.sample_num:]
+        # prompts = prompts[-args.sample_num:]
+        # examples = examples[-args.sample_num:]
+        # all_model_documents = all_model_documents[-args.sample_num:]
+
+        prompts = prompts[:args.sample_num]
+        examples = examples[:args.sample_num]
+        all_model_documents = all_model_documents[:args.sample_num]
         
     if args.enable_changed_rope:
         # 贝塞尔曲线
-        layer_num = config.num_hidden_layers
-        t = torch.linspace(0,1,layer_num)
-        layer_ids = torch.range(start=0,end=32).to(torch.int)
+
+        layer_ids = list(int(x) for x in args.apply_layers.split(','))
+        t = torch.linspace(0,1,len(layer_ids))
         layer_scales = []
         # 规定四个点
         # points = np.array([[4.95,1.3],[11.6,1.55],[20.65,1.5],[21.65,1.15]])
-        points = np.array([[7.15,1.45],[11.60,1.45],[20.65,1.5],[21.8,1.15]])
+        # points = np.array([[4.7,1.2],[10,1.5],[27,1.7],[28.8,1.5]])
+        # points = np.array([[4.7,1.2],[10,1.5],[24.6,1.7],[28.8,1.5]])
+        #vicuna7b
+        # points = np.array([
+        #         [
+        #             4.7,
+        #             1.2000000000000002
+        #         ],
+        #         [
+        #             10,
+        #             1.5
+        #         ],
+        #         [
+        #             19.699999999999967,
+        #             1.7000000000000008
+        #         ],
+        #         [
+        #             28.80000000000004,
+        #             1.5000000000000002
+        #         ]
+        #     ])
+
+        points = np.array([
+                [
+                    1.4000000000000001,
+                    1.1000000000000004
+                ],
+                [
+                    10,
+                    1.6
+                ],
+                [
+                    14.399999999999984,
+                    1.25000000000000003
+                ],
+                [
+                    14.799999999999983,
+                    1.1000000000000002
+                ]
+            ])
+
+
+        
         Bezier_result = Bezier(t,points)
         for point in Bezier_result:
             layer_scales.append(point[1].item())
         
-        # print(f"每层的scale为{layer_scales}")
+        logger.info(f"points为{points}---------layer_scale为{layer_scales}")
         
         #得到每层的scale后进行赋值
         model.replace_position_embeddings(layer_ids,layer_scales)
@@ -203,12 +304,13 @@ if __name__ == '__main__':
         with torch.no_grad():
             for batched_prompts in tqdm(chunks(sub_prompts, args.batch_size), total=math.ceil(len(sub_prompts) / args.batch_size)):
                 if args.batch_size > 1:
-                    input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True).input_ids.to(model.device)
+                    tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings, padding=True)
                 else:
-                    input_ids = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings).input_ids.to(model.device)
-                input_ids = input_ids.cuda()
+                    tok_input = tokenizer(batched_prompts, add_special_tokens=False, return_tensors='pt', truncation=True, max_length=config.max_position_embeddings)
+                tok_input = {key: value.to(model.device) for key, value in tok_input.items()}
+                input_ids = tok_input["input_ids"]
                 outputs = model.generate(
-                    input_ids=input_ids,
+                    **tok_input,
                     max_length=100 + len(input_ids[0]),
                     use_cache=True,
                     return_dict_in_generate=False,
@@ -228,8 +330,8 @@ if __name__ == '__main__':
                         )
                     new_text = text[prompt_length:]
                     responses.append(new_text)
-                    print("**************************")
-                    print(new_text)
+                    # print("**************************")
+                    # print(new_text)
                     # print("**************************")
 
         #从所有的设备上搜集数据
@@ -255,5 +357,9 @@ if __name__ == '__main__':
                     output_example["model_prompt_mention_random_ordering"] = False
                     output_example["model_use_random_ordering"] = False
                     f.write(json.dumps(output_example) + "\n")
-
-            evaluate_qa(args.output_path,None,logger)
+            if args.dataset=="kv":
+                evaluate_kv(args.output_path,None)
+            elif args.dataset=="syn":
+                evaluate_syn(args.output_path)
+            else:
+                evaluate_qa(args.output_path,None,logger)
