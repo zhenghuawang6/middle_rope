@@ -18,12 +18,12 @@ class DimMonoGeneticAlgorithm(GeneticAlgorithm):
         new_points = deepcopy(new_points)
         y_max=2.5
         y_min=1
-        area_size = 0.2
+        area_size = 0.3
         while (Individual(new_points) in self.history):
             for dim in range(len(new_points)):
                 cur_x = new_points[dim][0]
                 cur_y = new_points[dim][1]
-                if np.random.rand() < 0.3:
+                if np.random.rand() < 0.4:
                     if dim == 0:
                         x_evo_list_curr = np.arange(0.0, new_points[dim + 1][0], list_step)
                         y_evo_list_curr = np.arange(max(y_min, cur_y-area_size),min(y_max,cur_y+area_size),list_step)

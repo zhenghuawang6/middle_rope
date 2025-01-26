@@ -5,6 +5,7 @@ import pickle
 import argparse
 from transformers import AutoTokenizer
 from tqdm import tqdm
+from copy import deepcopy
 import os
 
 def genJunkContext(contexts, limit, tokenizer):
@@ -39,15 +40,15 @@ def insertIntoJunk(junk, doc, insert_place):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Args')
     parser.add_argument('--input_file', 
-                        default='../../data/synthwiki/madlibs1.csv',
+                        default='../../data/synthwiki/madlibs2.csv',
                         help='Where questions?')
     parser.add_argument('--junk_size', 
                         default=3200,
                         type=int,
                         help='How much junk context (in tokens)?')
-    parser.add_argument('--insert_place', 
-                        default='random',
-                        help='Should I put real doc at (max_pos / 2) or random?')
+    # parser.add_argument('--insert_place', 
+    #                     default='random',
+    #                     help='Should I put real doc at (max_pos / 2) or random?')
     parser.add_argument('--model_name', 
                         default='lmsys/vicuna-7b-v1.5')
     args = parser.parse_args()
@@ -55,7 +56,6 @@ if __name__ == "__main__":
 
     input_file = args.input_file
     junk_size = args.junk_size
-    insert_place = args.insert_place
     model_name = args.model_name
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     raw = pd.read_csv(input_file)
@@ -67,18 +67,36 @@ if __name__ == "__main__":
     real_context = re_ordered['context'].values
     real_question = re_ordered['question'].values
     real_answer = re_ordered['answer'].values
-    result = []
-    for q_idx, (question, context, answer) in tqdm(enumerate(zip(real_question, real_context, real_answer)),total=len(real_question),colour="green",desc="dealing with data"):
-        junk_contexts = [c for c in all_contexts if c != context]
-        context_to_use = genJunkContext(
-            junk_contexts, 
-            limit=junk_size, 
-            tokenizer=tokenizer,
-        )
-        random.shuffle(context_to_use)
-        supp_docs, pos_to_insert = insertIntoJunk(context_to_use, context, insert_place)
+    first_result = []
+    halfway_result = []
+    last_result = []
+    epoch = 5
+    for i in range(epoch):
+        for q_idx, (question, context, answer) in tqdm(enumerate(zip(real_question, real_context, real_answer)),total=len(real_question),colour="green",desc="dealing with data"):
+            junk_contexts = [c for c in all_contexts if c != context]
+            context_to_use = genJunkContext(
+                junk_contexts, 
+                limit=junk_size, 
+                tokenizer=tokenizer,
+            )
+            random.shuffle(context_to_use)
 
-        #进行存储
-        result.append({"question":question, "ctxs":supp_docs, "answers":answer})
+            #开始数据结构的构建
+            supp_docs, pos_to_insert = insertIntoJunk(deepcopy(context_to_use), context, "first")
+            #进行存储
+            first_result.append({"question":question, "ctxs":supp_docs, "answers":answer})
+
+            #开始数据结构的构建
+            supp_docs, pos_to_insert = insertIntoJunk(deepcopy(context_to_use), context, "halfway")
+            #进行存储
+            halfway_result.append({"question":question, "ctxs":supp_docs, "answers":answer})
+
+            #开始数据结构的构建
+            supp_docs, pos_to_insert = insertIntoJunk(deepcopy(context_to_use), context, "last")
+            #进行存储
+            last_result.append({"question":question, "ctxs":supp_docs, "answers":answer})
+
     model_name = model_name.split("/")[-1]
-    pickle.dump(result,open(f"./generated_data/syn_{model_name}_{junk_size}_{insert_place}.pickle","wb"))
+    pickle.dump(first_result,open(f"./generated_data/syn_{model_name}_{junk_size}_epoch_{epoch}_first.pickle","wb"))
+    pickle.dump(halfway_result,open(f"./generated_data/syn_{model_name}_{junk_size}_epoch_{epoch}_halfway.pickle","wb"))
+    pickle.dump(last_result,open(f"./generated_data/syn_{model_name}_{junk_size}_epoch_{epoch}_last.pickle","wb"))

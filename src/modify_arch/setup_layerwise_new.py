@@ -14,14 +14,15 @@ class LayerwiseLlamaForCausalLM(LlamaForCausalLM):
     #传入层数以及对应的scale，进行重新赋值！
     def replace_position_embeddings(self,layer_ids,layer_scales):
         for layer_id, layer_scale in zip(layer_ids, layer_scales):
-            modify_position_embedding = LlamaLinearScalingRotaryEmbedding(self.config.head_dim, max_position_embeddings=self.config.max_position_embeddings, scaling_factor=layer_scale).to("cuda")
+            # print(f"layer_id{layer_id}----->device{self.model.layers[layer_id].self_attn.q_proj.weight.device}")
+            modify_position_embedding = LlamaLinearScalingRotaryEmbedding(self.config.head_dim, max_position_embeddings=self.config.max_position_embeddings, scaling_factor=layer_scale, device=self.model.layers[layer_id].self_attn.q_proj.weight.device)
             setattr(self.model.layers[layer_id].self_attn, "rotary_emb", modify_position_embedding)
 
 def setup_models_layerwise(args):
     args.cache_dir = None
     config = AutoConfig.from_pretrained(args.model_name, cache_dir=args.cache_dir)
     config._attn_implementation = "eager"
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False,padding_side='left')
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=True, padding_side='left')
     if tokenizer.pad_token is None:
         tokenizer.add_special_tokens({'pad_token': '<custom_pad>'})
     if args.enable_changed_rope:

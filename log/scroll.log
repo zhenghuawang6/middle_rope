@@ -1,52 +1,52 @@
-[01-20 18:32 | absl | INFO]
+[01-24 12:04 | absl | INFO]
 Using default tokenizer.
 
-[01-20 18:32 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->summ_screen_fd
-{'rouge/rouge1': 30.2188, 'rouge/rouge2': 6.0416, 'rouge/rougeL': 15.7954, 'rouge/rougeLsum': 26.8588, 'rouge/geometric_mean': 14.2338, 'num_predicted': 20, 'mean_prediction_length_characters': 657.6, 'zero_scrolls_score': 14.2338, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [30.2188, 6.0416, 15.7954]}
+[01-24 12:04 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->summ_screen_fd
+{'rouge/rouge1': 27.345, 'rouge/rouge2': 5.2382, 'rouge/rougeL': 15.5574, 'rouge/rougeLsum': 23.8861, 'rouge/geometric_mean': 13.0617, 'num_predicted': 20, 'mean_prediction_length_characters': 437.75, 'zero_scrolls_score': 13.0617, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [27.345, 5.2382, 15.5574]}
 
-[01-20 18:32 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->qasper
-{'f1': 32.8068, 'num_predicted': 28, 'mean_prediction_length_characters': 209.5, 'zero_scrolls_score': 32.8068, 'display_keys': ['f1'], 'display': [32.8068]}
+[01-24 12:04 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->qasper
+{'f1': 34.1899, 'num_predicted': 28, 'mean_prediction_length_characters': 277.2143, 'zero_scrolls_score': 34.1899, 'display_keys': ['f1'], 'display': [34.1899]}
 
-[01-20 18:32 | absl | INFO]
+[01-24 12:04 | absl | INFO]
 Using default tokenizer.
 
-[01-20 18:32 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->qmsum
-{'rouge/rouge1': 28.7327, 'rouge/rouge2': 6.886, 'rouge/rougeL': 19.5159, 'rouge/rougeLsum': 25.8669, 'rouge/geometric_mean': 15.6884, 'num_predicted': 20, 'mean_prediction_length_characters': 473.7, 'zero_scrolls_score': 15.6884, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [28.7327, 6.886, 19.5159]}
+[01-24 12:04 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->qmsum
+{'rouge/rouge1': 28.1131, 'rouge/rouge2': 7.0184, 'rouge/rougeL': 18.7192, 'rouge/rougeLsum': 24.0074, 'rouge/geometric_mean': 15.4577, 'num_predicted': 20, 'mean_prediction_length_characters': 293.3, 'zero_scrolls_score': 15.4577, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [28.1131, 7.0184, 18.7192]}
 
-[01-20 18:32 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->narrative_qa
-{'f1': 11.5242, 'num_predicted': 20, 'mean_prediction_length_characters': 74.0, 'zero_scrolls_score': 11.5242, 'display_keys': ['f1'], 'display': [11.5242]}
+[01-24 12:04 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->narrative_qa
+{'f1': 7.9113, 'num_predicted': 20, 'mean_prediction_length_characters': 70.1, 'zero_scrolls_score': 7.9113, 'display_keys': ['f1'], 'display': [7.9113]}
 
-[01-20 18:32 | absl | INFO]
+[01-24 12:04 | absl | INFO]
 Using default tokenizer.
 
-[01-20 18:32 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->gov_report
-{'rouge/rouge1': 36.1304, 'rouge/rouge2': 14.9294, 'rouge/rougeL': 18.3562, 'rouge/rougeLsum': 34.1877, 'rouge/geometric_mean': 21.4734, 'num_predicted': 20, 'mean_prediction_length_characters': 1334.15, 'zero_scrolls_score': 21.4734, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [36.1304, 14.9294, 18.3562]}
+[01-24 12:04 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->gov_report
+{'rouge/rouge1': 30.1797, 'rouge/rouge2': 13.156, 'rouge/rougeL': 17.2083, 'rouge/rougeLsum': 28.7426, 'rouge/geometric_mean': 18.9754, 'num_predicted': 20, 'mean_prediction_length_characters': 1053.8, 'zero_scrolls_score': 18.9754, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [30.1797, 13.156, 17.2083]}
 
-[01-20 18:33 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->quality
-{'accuracy': 42.8571, 'num_predicted': 21, 'mean_prediction_length_characters': 59.5714, 'zero_scrolls_score': 42.8571, 'display_keys': ['accuracy'], 'display': [42.8571]}
+[01-24 12:04 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->quality
+{'accuracy': 38.0952, 'num_predicted': 21, 'mean_prediction_length_characters': 52.0476, 'zero_scrolls_score': 38.0952, 'display_keys': ['accuracy'], 'display': [38.0952]}
 
-[01-20 18:33 | absl | INFO]
+[01-24 12:05 | absl | INFO]
 Using default tokenizer.
 
-[01-20 18:33 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->squality
-{'rouge/rouge1': 32.1438, 'rouge/rouge2': 7.9456, 'rouge/rougeL': 17.9113, 'rouge/rougeLsum': 29.4982, 'rouge/geometric_mean': 16.6003, 'num_predicted': 80, 'mean_prediction_length_characters': 613.65, 'zero_scrolls_score': 16.6003, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [32.1438, 7.9456, 17.9113]}
+[01-24 12:05 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->squality
+{'rouge/rouge1': 30.5002, 'rouge/rouge2': 8.2936, 'rouge/rougeL': 18.2528, 'rouge/rougeLsum': 28.1303, 'rouge/geometric_mean': 16.6517, 'num_predicted': 80, 'mean_prediction_length_characters': 504.7, 'zero_scrolls_score': 16.6517, 'display_keys': ['rouge/rouge1', 'rouge/rouge2', 'rouge/rougeL'], 'display': [30.5002, 8.2936, 18.2528]}
 
-[01-20 18:33 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->musique
-{'f1': 23.4473, 'num_predicted': 20, 'mean_prediction_length_characters': 95.15, 'zero_scrolls_score': 23.4473, 'display_keys': ['f1'], 'display': [23.4473]}
+[01-24 12:05 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->musique
+{'f1': 11.0173, 'num_predicted': 20, 'mean_prediction_length_characters': 34.3, 'zero_scrolls_score': 11.0173, 'display_keys': ['f1'], 'display': [11.0173]}
 
-[01-20 18:33 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->space_digest
-{'exp_similarity': 17.2626, 'num_predicted': 20, 'mean_prediction_length_characters': 285.45, 'zero_scrolls_score': 17.2626, 'display_keys': ['exp_similarity'], 'display': [17.2626]}
+[01-24 12:05 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->space_digest
+{'exp_similarity': 46.6099, 'num_predicted': 20, 'mean_prediction_length_characters': 3.05, 'zero_scrolls_score': 46.6099, 'display_keys': ['exp_similarity'], 'display': [46.6099]}
 
-[01-20 18:33 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
-lmsys_vicuna_7b_v1.5--------->book_sum_sort
-{'concordance_index': 11.829, 'num_predicted': 20, 'mean_prediction_length_characters': 36.15, 'zero_scrolls_score': 11.829, 'display_keys': ['concordance_index'], 'display': [11.829]}
+[01-24 12:05 | /data/wangzh/middle_rope/src/utils/zero_scrolls/evalution/evaluation.py | INFO]
+/data/wangzh/middle_rope/script/layerwise_generation/.._download_StableBeluga_7B---------->book_sum_sort
+{'concordance_index': 0.0, 'num_predicted': 20, 'mean_prediction_length_characters': 15.45, 'zero_scrolls_score': 0.0, 'display_keys': ['concordance_index'], 'display': [0.0]}
 

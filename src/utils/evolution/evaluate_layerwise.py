@@ -43,6 +43,33 @@ def format_instruct_prompt(instruction):
     )
     return PROMPT_FOR_GENERATION
 
+def format_chat_prompt(input,model_path,tokenizer):
+    model_path=model_path.lower()
+
+    if "mpt-7b-8k-instruct" in model_path:
+        def format_prompt(instruction):
+            template = "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n###Instruction\n{instruction}\n\n### Response\n"
+            return template.format(instruction=instruction)
+        prompt = format_prompt(input)
+
+    elif "longchat" in model_path or "vicuna" in model_path:
+        from fastchat.model import get_conversation_template
+        conv = get_conversation_template("vicuna")
+        conv.append_message(conv.roles[0], input)
+        conv.append_message(conv.roles[1], None)
+        prompt = conv.get_prompt()
+
+    else:
+        messages=[{"role":"user","content":input}]
+        chat_template = tokenizer.chat_template
+        if chat_template is None:
+            import warnings
+            warnings.warn("chat_template is None, return the original input")
+            return input
+
+        prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+    return prompt
 
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
@@ -88,8 +115,9 @@ def get_prompt_data(args):
                         query_aware_contextualization=False,
                         answer_idx=args.answer_idx
                     )
-                    if "instruct" in args.model_name:
-                        prompt = format_instruct_prompt(prompt)
+                    # if "instruct" in args.model_name:
+                    #     prompt = format_instruct_prompt(prompt)
+                    prompt=format_chat_prompt(prompt,args.model_name,tokenizer=args.tokenizer)
                     prompts.append(prompt)
                     examples.append(deepcopy(input_example))
                     all_model_documents.append(documents)
@@ -180,6 +208,7 @@ def main(args):
 
     #初始化模型
     config, tokenizer, model = setup_models_layerwise(args)
+    args.tokenizer = tokenizer
     #初始化数据,通过answer_index获取数据
     args.answer_idx = 1
     start_prompts, start_examples, _ = get_prompt_data(args)
@@ -209,8 +238,8 @@ def main(args):
             layer_scales.append(point[1].item())
         model.replace_position_embeddings(layer_ids,layer_scales)
 
-        # start_score = commpute_metric(model, tokenizer, config, start_examples, start_prompts, args)
-        start_score = 0
+        start_score = commpute_metric(model, tokenizer, config, start_examples, start_prompts, args)
+        # start_score = 0
         end_score = commpute_metric(model, tokenizer, config, end_examples, end_prompts, args)
 
         sock.send(json.dumps({'result': [start_score,end_score]}).encode())
