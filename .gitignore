@@ -12,7 +12,6 @@ data/synthwiki/generated_data/
 data/mutiqa/nq-open-contriever-msmarco-retrieved-documents.jsonl.gz
 data/synthwiki/madlibs1.csv
 data/synthwiki/madlibs2.csv
-test.ipynb
 utils/lost_in_the_middle/result.log
 utils/lost_in_the_middle/result_test.log
 # utils/synthwiki/
