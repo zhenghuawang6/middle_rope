@@ -2,5 +2,6 @@
 
 python -u ./make_kv_retrieval_data.py \
     --num-keys 50 \
-    --num-examples 4000 \
+    --num-examples 1000 \
     --output-path generated_data/kv-retrieval-50_keys_4000.jsonl
+

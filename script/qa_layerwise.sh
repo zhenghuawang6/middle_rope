@@ -1,23 +1,149 @@
 
 export http_proxy=127.0.0.1:7890
 export https_proxy=127.0.0.1:7890
-cuda="7"
-num_pro=1
+cuda="0,1,2,3"
+num_pro=4
 
+#前500条数据测试正序以及倒序的影响
+
+#baseline
+# for answer_index in 1 5 10;
+# do
+# CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
+#     --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+#     --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
+#     --model_name lmsys/vicuna-7b-v1.5 \
+#     --seed 42 \
+#     --sample_num 500 \
+#     --batch_size 2 \
+#     --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31" \
+#     --answer_idx $answer_index \
+#     --small_bound 1.59 \
+#     --big_bound 1.61 \
+#     --steps 6 \
+
+# done
+
+# done    --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31" \
+
+
+#scale从小到大
+for layer_num in 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31;
+do
+
+for answer_index in 0 5 10;
+do
 CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
-    --input_path ../download/Llama-2-7b-chat-hf \
-    --output_path ../result/mdqa_result/mdqa_10_layerwise_documents${i}.json \
+    --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+    --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
     --model_name lmsys/vicuna-7b-v1.5 \
     --seed 42 \
-    --sample_num 1000 \
-    --enable_changed_rope \
-    --batch_size 4 \
-    --apply_layers "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31" \
-    --answer_idx 5 \
-    --small_bound 1.2 \
-    --big_bound 1.7 \
-    --steps 6 \
+    --sample_num 300 \
+    --batch_size 2 \
+    --apply_layers $layer_num \
+    --answer_idx $answer_index \
+    --small_bound 1.59 \
+    --big_bound 1.61 \
+    --steps 4 \
+    --enable_changed_rope
 
+done
+done
+
+
+for layer_num in {1..30..2}; do
+    for answer_index in 0 5 10; do
+        CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
+            --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+            --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
+            --model_name lmsys/vicuna-7b-v1.5 \
+            --seed 42 \
+            --sample_num 300 \
+            --batch_size 2 \
+            --apply_layers "$layer_num,$((layer_num+1))" \
+            --answer_idx $answer_index \
+            --small_bound 1.59 \
+            --big_bound 1.61 \
+            --steps 2 \
+            --enable_changed_rope
+    done
+done
+
+for layer_num in {1..29..3}; do
+    for answer_index in 0 5 10; do
+        CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
+            --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+            --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
+            --model_name lmsys/vicuna-7b-v1.5 \
+            --seed 42 \
+            --sample_num 300 \
+            --batch_size 2 \
+            --apply_layers "$layer_num,$((layer_num+1)),$((layer_num+2))" \
+            --answer_idx $answer_index \
+            --small_bound 1.59 \
+            --big_bound 1.61 \
+            --steps 3 \
+            --enable_changed_rope
+    done
+done
+
+for layer_num in {1..28..4}; do
+    for answer_index in 0 5 10; do
+        CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
+            --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+            --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
+            --model_name lmsys/vicuna-7b-v1.5 \
+            --seed 42 \
+            --sample_num 300 \
+            --batch_size 2 \
+            --apply_layers "$layer_num,$((layer_num+1)),$((layer_num+2)),$((layer_num+3))" \
+            --answer_idx $answer_index \
+            --small_bound 1.59 \
+            --big_bound 1.61 \
+            --steps 4 \
+            --enable_changed_rope
+    done
+done
+
+
+
+for answer_index in 0 5 10;
+do
+CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
+    --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+    --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
+    --model_name lmsys/vicuna-7b-v1.5 \
+    --seed 42 \
+    --sample_num 300 \
+    --batch_size 2 \
+    --apply_layers "4,5,6,7" \
+    --answer_idx $answer_index \
+    --small_bound 1.59 \
+    --big_bound 1.61 \
+    --steps 4 \
+    --enable_changed_rope
+
+done
+
+# #scale从大到小
+# for answer_index in 1 5;
+# do
+# CUDA_VISIBLE_DEVICES=$cuda accelerate launch --num_processes=$num_pro --main_process_port=29509 ../src/inference_qa_layerwise.py \
+#     --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz \
+#     --output_path ../result/mdqa_result/mdqa_10_layerwise_documents_$answer_index.json \
+#     --model_name lmsys/vicuna-7b-v1.5 \
+#     --seed 42 \
+#     --sample_num 300 \
+#     --enable_changed_rope \
+#     --batch_size 2 \
+#     --apply_layers "13,14,15,16,17,18,19,20,21,22" \
+#     --answer_idx $answer_index \
+#     --small_bound 1.4 \
+#     --big_bound 1.8 \
+#     --steps 10 \
+#     --monotonic_decrease
+
+# done
 
 # #只对前面的层数进行改变
 # for start_index in 1.3 1.4 ;

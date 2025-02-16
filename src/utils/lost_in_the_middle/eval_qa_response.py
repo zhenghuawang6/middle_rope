@@ -62,11 +62,17 @@ def get_metrics_for_example(example):
     # NOTE: we take everything up to the first newline, since otherwise models could hack
     # the metric by simply copying te input context (as the gold answer is guaranteed
     # to occur in the input context).
-    model_answer = model_answer.split("\n")[0].strip()
-
     example_metrics = {}
     for (metric, metric_name) in METRICS:
         example_metrics[metric_name] = metric(prediction=model_answer, ground_truths=gold_answers)
+    model_answer = model_answer.split("\n")[0].strip()
+    # print("-----------------------")
+    # print(gold_answers)
+    # print("########################")
+    # print(model_answer)
+
+    # print(example_metrics[metric_name])
+
     return (example_metrics, example)
 
 def evaluate_qa(input_path,output_path,logger):
@@ -74,7 +80,7 @@ def evaluate_qa(input_path,output_path,logger):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filename='/data/wzh/paperproject/Ms/Ms-PoE/utils/lost_in_the_middle/result_test.log', filemode='a')
+    logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO)
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-path", help="Path to data with model predictions and answers.", required=True)
     parser.add_argument(

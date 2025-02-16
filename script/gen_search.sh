@@ -21,13 +21,14 @@
 
 python ../src/utils/evolution/search.py \
     --model_name ../download/Llama-2-7b-chat-hf \
-    --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/chat_template_llama_2_7b_chat_first_500.jsonl \
+    --input_path /data/wangzh/middle_rope/data/mutiqa/generated_data/nq-open-10_total_documents_gold_at_0.jsonl.gz\
     --output_path ../result/layerwise/chat_llame_mdqa_10documents.json \
-    --sample_num 100 \
+    --sample_num 200 \
     --batch_size 1 \
-    --num_doc 20 \
-    --output_dir ../log/llama_7b_chat/nq20_first_100 \
-    --cuda_indexs "1,0,3"
+    --num_doc 10 \
+    --output_dir ../log/llama_7b_chat/nq10_ori_data \
+    --cuda_indexs "1,0,2,3" \
+    --recovery /data/wangzh/middle_rope/log/llama_7b_chat/nq10_ori_data/log-20250203-233003.json
 
 
 

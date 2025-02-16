@@ -1,4 +1,4 @@
-for lengeth in 3000;
+for lengeth in 3800;
 do
 
 python ./process_data.py \

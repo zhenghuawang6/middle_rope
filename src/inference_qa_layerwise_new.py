@@ -21,6 +21,7 @@ from rouge import Rouge
 from xopen import xopen
 import logging
 from copy import deepcopy
+from transformers import AutoTokenizer
 from utils.log_utils.utils import get_git_commit_hash
 accelerator = Accelerator()
 
@@ -97,12 +98,15 @@ def format_chat_prompt(input,model_path,tokenizer):
     else:
         messages=[{"role":"user","content":input}]
         chat_template = tokenizer.chat_template
-        if chat_template is None:
+        if chat_template is None and "stable" not in model_path:
             import warnings
             warnings.warn("chat_template is None, return the original input")
             return input
-
-        prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        if "stable" in model_path:
+            # prompt = AutoTokenizer.from_pretrained("../download/Llama-2-7b-chat-hf").apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            prompt = f"### System:\nThis is a system prompt, please behave and help the user.### User:\n{input}\n### Assistant:\n"
+        else:
+            prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
     return prompt
 
@@ -130,6 +134,8 @@ if __name__ == '__main__':
     parser.add_argument("--answer_idx", type=int, default=0)
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--dataset", type=str, default="nq")
+    parser.add_argument("--is_chat", action='store_true')
+
     args = parser.parse_args()
     #创建日志文件
     print(f"model:{args.model_name}\nanswer_index:{args.answer_idx}\ndataset:{args.dataset}\ninput_path{args.input_path}")
@@ -152,6 +158,7 @@ if __name__ == '__main__':
 
     ## Loading Models
     config, tokenizer, model = setup_models_layerwise(args)
+    model = model.cuda()
     accelerator.wait_for_everyone()
 
     ## Loading Dataset
@@ -185,9 +192,12 @@ if __name__ == '__main__':
                             query_aware_contextualization=False,
                             answer_idx=args.answer_idx
                         )
-                    # if "instruct" in args.model_name:
-                    #     prompt = format_instruct_prompt(prompt)
-                    prompt = format_chat_prompt(prompt,args.model_name,tokenizer)
+                    if  args.is_chat:
+                        prompt = format_chat_prompt(prompt, args.model_name,tokenizer)
+                    else:
+                        if "instruct" in args.model_name:
+                            prompt = format_instruct_prompt(prompt)
+                    # prompt = format_chat_prompt(prompt,args.model_name,tokenizer)
                     prompts.append(prompt)
                     examples.append(deepcopy(input_example))
                     all_model_documents.append(documents)
@@ -202,8 +212,11 @@ if __name__ == '__main__':
                 mention_random_ordering=False,
                 query_aware_contextualization=False,
             )
-            if "instruct" in args.model_name:
-                prompt = format_instruct_prompt(prompt)
+            if args.is_chat:
+                prompt = format_chat_prompt(prompt, args.model_name,tokenizer)
+            else:
+                if "instruct" in args.model_name:
+                    prompt = format_instruct_prompt(prompt)
             prompts.append(prompt)
             examples.append(deepcopy(single_data))
             all_model_documents.append(documents)
@@ -224,19 +237,24 @@ if __name__ == '__main__':
                 kv_prompt = get_kv_retrieval_prompt(
                     data=ordered_kv_records, key=key, query_aware_contextualization=False
                 )
+                if args.is_chat:
+                    kv_prompt = format_chat_prompt(kv_prompt, args.model_name,tokenizer)
+                else:
+                    if "instruct" in args.model_name:
+                        kv_prompt = format_instruct_prompt(kv_prompt)
                 prompts.append(kv_prompt)
                 examples.append(deepcopy(input_example))
                 all_model_documents.append(ordered_kv_records)
 
     #对样本进行了采样
     if len(prompts) > args.sample_num:
-        # prompts = prompts[-args.sample_num:]
-        # examples = examples[-args.sample_num:]
-        # all_model_documents = all_model_documents[-args.sample_num:]
+        prompts = prompts[-args.sample_num:]
+        examples = examples[-args.sample_num:]
+        all_model_documents = all_model_documents[-args.sample_num:]
 
-        prompts = prompts[:args.sample_num]
-        examples = examples[:args.sample_num]
-        all_model_documents = all_model_documents[:args.sample_num]
+        # prompts = prompts[:args.sample_num]
+        # examples = examples[:args.sample_num]
+        # all_model_documents = all_model_documents[:args.sample_num]
         
     if args.enable_changed_rope:
         # 贝塞尔曲线
@@ -248,11 +266,12 @@ if __name__ == '__main__':
         # points = np.array([[4.95,1.3],[11.6,1.55],[20.65,1.5],[21.65,1.15]])
         # points = np.array([[4.7,1.2],[10,1.5],[27,1.7],[28.8,1.5]])
         # points = np.array([[4.7,1.2],[10,1.5],[24.6,1.7],[28.8,1.5]])
-        #vicuna7b
+        #vicuna7b  后边的表现比较好
+        
         # points = np.array([
         #         [
         #             4.7,
-        #             1.2000000000000002
+        #             1.3000000000000002
         #         ],
         #         [
         #             10,
@@ -263,35 +282,95 @@ if __name__ == '__main__':
         #             1.7000000000000008
         #         ],
         #         [
+        #             28.80000000000004, 
+        #             1.5000000000000002
+        #         ]
+        #     ])
+
+    #vicuna 的 MDQA
+        # points = np.array([
+        #         [
+        #             4.7,
+        #             1.2
+        #         ],
+        #         [
+        #             10,
+        #             1.35
+        #         ],
+        #         [
+        #             19.7,
+        #             1.75
+        #         ],
+        #         [
+        #             28.8,
+        #             1.5
+        #         ]
+        #     ])
+        
+        #vicuna 的 KV
+        points = np.array([
+                [
+                    4.7,
+                    1
+                ],
+                [
+                    10,
+                    1.1
+                ],
+                [
+                    19.7,
+                    1.35
+                ],
+                [
+                    28.8,
+                    1.2
+                ]
+            ])
+        # points = np.array([
+        #         [
+        #             22.3,
+        #             1.2000000000000007
+        #         ],
+        #         [
+        #             25.399999999999935,
+        #             1.5000000000000002
+        #         ],
+        #         [
+        #             26.99999999999994,
+        #             1.7000000000000006
+        #         ],
+        #         [
         #             28.80000000000004,
         #             1.5000000000000002
         #         ]
         #     ])
 
-        points = np.array([
-                [
-                    1.4000000000000001,
-                    1.1000000000000004
-                ],
-                [
-                    10,
-                    1.6
-                ],
-                [
-                    14.399999999999984,
-                    1.25000000000000003
-                ],
-                [
-                    14.799999999999983,
-                    1.1000000000000002
-                ]
-            ])
+        # points = np.array([
+        #         [
+        #             1.4000000000000001,
+        #             1.1000000000000004
+        #         ],
+        #         [
+        #             10,
+        #             1.6
+        #         ],
+        #         [
+        #             14.399999999999984,
+        #             1.25000000000000003
+        #         ],
+        #         [
+        #             14.799999999999983,
+        #             1.1000000000000002
+        #         ]
+        #     ])
 
 
         
         Bezier_result = Bezier(t,points)
         for point in Bezier_result:
             layer_scales.append(point[1].item())
+        
+        
         
         logger.info(f"points为{points}---------layer_scale为{layer_scales}")
         

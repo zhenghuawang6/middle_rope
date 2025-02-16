@@ -108,12 +108,22 @@ def get_prompt_data(args):
                         documents.append(Document.from_dict(ctx))
                     if not documents:
                         raise ValueError(f"Did not find any documents for example: {input_example}")
-                    prompt = get_qa_prompt(
+                    
+                    # prompt = get_qa_prompt(
+                    #     question,
+                    #     documents,
+                    #     mention_random_ordering=False,
+                    #     query_aware_contextualization=False,
+                    # )
+                
+                    prompt = get_qa_prompt_index(
                         question,
                         documents,
                         mention_random_ordering=False,
                         query_aware_contextualization=False,
+                        answer_idx=args.answer_idx
                     )
+
                     # if "instruct" in args.model_name:
                     #     prompt = format_instruct_prompt(prompt)
                     prompt=format_chat_prompt(prompt,args.model_name,tokenizer=args.tokenizer)
@@ -205,10 +215,10 @@ def main(args):
     config, tokenizer, model = setup_models_layerwise(args)
     args.tokenizer = tokenizer
     #初始化数据,通过answer_index获取数据
-    args.answer_idx = 1
+    args.answer_idx = 0
     start_prompts, start_examples, _ = get_prompt_data(args)
-    # args.answer_idx = args.num_doc
-    args.input_path = args.input_path.replace("first","end")
+    args.answer_idx = args.num_doc
+    # args.input_path = args.input_path.replace("first","end")
     end_prompts, end_examples, _ = get_prompt_data(args)
     #发送准备好的数据
     sock.send(json.dumps({'model_ready': True}).encode())

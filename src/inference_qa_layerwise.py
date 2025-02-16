@@ -92,12 +92,16 @@ if __name__ == '__main__':
     logging_filename = f"../log/layerwise/{commit_hash_id}_result.log"
     directory = os.path.dirname(logging_filename)
     os.makedirs(directory, exist_ok=True)
-    with open(logging_filename, 'w') as file:
-        file.write("")
+    if not os.path.exists(logging_filename):
+        with open(logging_filename, 'w') as file:
+            file.write("")
 
     logger = logging.getLogger(__name__)
     logging.basicConfig(format="%(asctime)s - %(module)s - %(levelname)s - %(message)s", level=logging.INFO, filename=logging_filename, filemode='a')
     
+    logging.info(f"apply_layers:{args.apply_layers}")
+    logging.info(f"answer_idx:{args.answer_idx}")
+
     if accelerator.is_main_process:
         logger.info("running %s", " ".join(sys.argv))
     #处理相关的step
@@ -168,9 +172,9 @@ if __name__ == '__main__':
 
     #对样本进行了采样
     if len(prompts) > args.sample_num:
-        prompts = prompts[-args.sample_num:]
-        examples = examples[-args.sample_num:]
-        all_model_documents = all_model_documents[-args.sample_num:]
+        prompts = prompts[:args.sample_num]
+        examples = examples[:args.sample_num]
+        all_model_documents = all_model_documents[:args.sample_num]
 
 
     # print("进行推理。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。")
