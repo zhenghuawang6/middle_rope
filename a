@@ -1,0 +1,151 @@
+## Reviewer TRrD
+
+### 1. The genetic algorithm introduces high time complexity, which may limit its practicality.
+
+The Bezier curve’s has ability to fit diverse shape using just a few control points(we used only four control points in this work.). when optimizing these points with a genetic algorithm, we discretized the search space. This combination of minimal control points and a discrete space significantly cuts down the search space and reduces the consumption of time. Under the experimental conditions described in Section 3.3, our search space has been reduced by approximately $10^{20}$ times.
+
+With four A100 GPUs, Suitable layer-specific scaling factors can be found in 4–6 hours with 200 samples of MDQA dataset and it can be generalized to various long-text task scenarios which is shown in Table 2 and Table 6. Compared to training on long-text inputs, our method is more practical for real-world applications since this method only requires a small amount of computational resources for inference. 
+
+
+### 2. Due to the high complexity of the genetic algorithm, reproducibility may be challenging. It would be helpful to clarify comparisonwhether the authors plan to release the code.
+
+To maintain anonymity during the review process, we have not disclosed the implementation code. Once the results are available, we will release the code, including the genetic algorithm combined with the Bézier curve and the modifications to the model’s layers.
+
+### 3. Consider giving the proposed method a short, descriptive acronym, which would make it easier to reference.
+
+We sincerely appreciate your suggestions. Based on the title and abstract, we plan to name this paper LS-PoE (Layer-Specific Scaling Positional Encoding) to facilitate citation.
+
+### 4. The calculation of the normalized attention score in Eq14 is unclear. Further clarification would be appreciated.
+
+
+The normalized attention score means that the attention score is processed through the softmax operation and is transformed into a probability distribution（The sum of the normalized attention scores is 1.）. This probability distribution is used in formula (14) to calculate the entropy value.
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+$$
+
+
+
+
+## Reviewer SNfA
+
+### 1. Based on Eq. 11, it seems that the scaling is optimized with QA datasets. It needs to be verified whether this scaling harms LM for its performance on other tasks.
+
+Our method identifies the Bezier curve using only a small number of samples, and the resulting layer-specific position encodings are highly versatile, adaptable to a wide range of tasks. 
+
+As shown in Table 6 of Appendix C, the scaling factors derived from 200 MDQA samples (experimental details in Appendix B) significantly enhance performance across seven ZeroSCROLLS tasks, as described in lines 471–478.
+
+|  | mmlu | ceval |
+| ---- | ---- | ---- |
+| StableBeluga-7B(origin) | 51.50 | 34.78 |
+| StableBeluga-7B(scaled) | 51.30 | 34.63 |
+| Vicuna-7B-v1.5(origin) | 49.90 | 49.42 |
+| Vicuna-7B-v1.5(scaled) | 49.00 | 49.33 |
+
+We also selected two widely used datasets to assess the model’s general capabilities before and after scaling. The results show that our method significantly enhances the model’s ability to process long texts while maintaining overall performance.
+
+
+
+### 2. The intuition for why layer-specific scaling can mitigate the lost-in-the-middle problem is unclear. At line 51, the statement "Recent studies suggest that this long-term decay effect may contribute to the “lost-in-the-middle” problem." is not substantiated. Please provide a reference.
+
+We referenced [1] in line 54 to explain this statement. Additionally, in the related work section (lines 191–193), we discuss studies [1] and [2] that address RoPE’s long-term decay to mitigate the "lost in the middle" effect.
+
+In the introduction (lines 53–85), we introduce layer-specific scaling based on head-wise scaling (Ms-PoE) and highlight its advantages over Ms-PoE.
+
+In Section 3.1, we analyze how RoPE’s long-term decay shifts the model’s focus toward the end of the context, while causal attention emphasizes the beginning, leading to the "lost in the middle" issue. To address this, we considered two approaches: shifting excess attention from the start to the middle or redistributing attention from the end. Since modifying causal attention, a core structural component, is challenging, we opted for the latter(line 287-309).
+
+Table 4 shows that adjusting layer-specific scaling factors influences attention distribution across context positions, making uniform single scaling factors insufficient for balanced focus and leading to the "lost in the tail" issue (lines 75–85, Table 2). As a result, we adopted a layer-specific scaling strategy.
+
+[1]Zhenyu Zhang, Runjin Chen, Shiwei Liu, Zhewei Yao, Olatunji Ruwase, Beidi Chen, Xiaoxia Wu, and Zhangyang Wang. 2024. Found in the middle:How language models use long contexts better via
+plug-and-play positional encoding. arXiv preprint arXiv:2403.04797.
+
+[2]Yuhan Chen, Ang Lv, Ting-En Lin, Changyu Chen, Yuchuan Wu, Fei Huang, Yongbin Li, and Rui Yan. 2023b. Fortify the shortest stave in attention: Enhanc654 ing context awareness of large language models for effective tool use. arXiv preprint arXiv:2312.04455.
+
+
+
+### 3. The experimental setup is unclear. It's unclear what training dataset(s) is used to compute/optimize Eq. 11. This is extremely important for two reasons, If the size of the training dataset is great, then this method may be extremely computational expensive.If the training dataset needs to be in the same domain as the test dataset, then it may suggest that this method is task/domain-specific
+
+
+In Appendix B, we provide a thorough explanation of the dataset settings used to determine these scaling factors. the scaling factors determined by 200 samples from MDQA dataset significantly enhances performance across seven tasks in the ZeroSCROLLS dataset, which is shown in Table 6 and described in line 471-478. 
+
+Notably, we did not determine scaling factors through fine-tuning. Instead, we adjusted them during inference using a genetic algorithm. The Bézier curve efficiently fits diverse shapes with just a few control points (we used only four in this work). By optimizing these points with a genetic algorithm, we discretized the search space, significantly reducing its size and computation time. Under the experimental conditions in Section 3.3, our search space was reduced by approximately $10^{20}$ times. Compared to training on long-text inputs, our method is more practical for real-world applications, as it requires only minimal computational resources for inference.
+
+
+### 4. Some of the analyses seem unnecessary and unspecific/not rigorous. Section 3.1-(1): The experiment does not "demonstrates that the model’s causal attention makes it focus more on earlier content (line 262)".
+
+In addition to semantic similarity between tokens, two other factors influence token correlation. The first is unidirectional causal attention, which gives the earlier parts of the context more opportunities to contribute to attention calculations. The second is position encoding, which biases the model toward focusing on the later parts of the context. To demonstrate that, we conducted this experiment without the influence of position encoding to prove causal attention naturally shifts the model’s focus toward the start part of the context.
+
+The details of our experimental setup are provided in lines 245–258 of the paper, and the results are shown in Figure 3. The findings indicate that as earlier tokens participate in attention calculations more frequently, their information becomes increasingly integrated into subsequent tokens, making their representations progressively more similar which is demonstrates that the model’s causal attention makes it focus more on earlier content.
+
+
+### 5. In this experiment, the authors "remove the RoPE from layers 2 to 4 (line 254)", which is unnatural. Firstly, it's unclear why layer 2 to 4 are chosen. Secondly, removing RoPE in the intermediate layer may cause distributional shifts in the intermediate representations. The results are thus not representative of LM's practical usage.
+
+First, it is important to clarify that after removing the position encoding from layers 2 to 4, we compute the similarity of token representations output by layer 4, not the final-layer representations. Therefore, the representation shift after the scaled layers is not our concern. This has been detailed in line 255.
+
+Secondly, since Rotary Position Embedding (RoPE) operates at each layer, removing position encoding from deeper layers does not entirely eliminate positional information, as earlier layers still retain it. According to [1] and our experimental setup, interfering with layers 0 to 1 degrades model performance. Therefore, we excluded these layers from consideration. Instead, we randomly selected several consecutive layers and removed their position encoding, confirming that the previously observed phenomenon remained consistent.
+
+[粘贴实验]
+
+### 6. Section 3.1-(2): Figure 5 seems redundant, because showing the attention scores (Figure 4) seem to be sufficient to show the benefit of scaling. Also, showing the attention scores is a more direct way to show the effect of scaling than showing the cosine similarity, as higher cosine similarity does not necessarily imply higher attention score.
+
+
+A token with a high attention score does not necessarily indicate that the model prioritizes it more, as the magnitude of the value vector $V$ also influences how much information from that token is integrated [4]. Furthermore, the diverse attention patterns across the different heads in multi-head attention make it challenging to determine which heads or combinations should be used to evaluate the effect of RoPE.
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+$$
+
+Figure 4, adapted from [5], visualizes attention under ideal conditions where the magnitudes of value vectors $V$ remain constant. This provides reader a clear visualization of long-term decay and the impact of different scaling factors in an idealized setting.
+
+Figure 5, using cosine similarity to measure representation similarity, illustrates how middle-part tokens contribute to the decoding process as scaling factors increase in real-world applications. We think that these figures are not redundant and show the effect of scaling from both theoretical and practical perspectives.
+ 
+[4] Kobayashi G, Kuribayashi T, Yokoi S, et al. Attention is Not Only a Weight: Analyzing Transformers with Vector Norms[C]//Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP). 2020: 7057-7075.
+
+[5] Su J, Ahmed M, Lu Y, et al. Roformer: Enhanced transformer with rotary position embedding[J]. Neurocomputing, 2024, 568: 127063.
+
+
+### 7. Section 5: "Larger scaling factors tend to disperse the attention across more tokens, allowing the model to capture a broader context, while smaller scaling factors help to concentrate the attention on more relevant tokens, filtering out irrelevant information (line 578)" I don't think this is correct. Please elaborate on it. Because this statement is not substantiated, the arguments in the paragraph based on this statement are not substantiated either
+
+
+This is a key finding from our experiment. By attention entropy, we refer to how evenly attention scores are distributed across tokens—higher entropy indicates more uniform distribution, while lower entropy reflects attention concentration on specific tokens.
+
+As shown in Figure 8(c) of Appendix D, increasing the scaling factor initially leads to more concentrated attention before it later disperses. According to the scaling factor distribution in our experiment (Figure 9), the front layers have significantly larger scaling factors than the back layers. Based on these findings, we propose a logical explanation from the perspective of attention entropy: divergent attention in the front layers enables the model to capture a broader range of information, while concentrated attention in the back layers helps refine the focus on the most relevant details, effectively filtering out irrelevant noise.
+
+
+### 8. Section 5: "This reduced entropy suggests that middle-layer attention mechanisms exhibit heightened sensitivity to entropy fluctuations during extrapolation." Please elaborate on this, including the definition of "entropy fluctuations".
+"Entropy fluctuations" refer to drastic changes in attention entropy. As shown in Figure 8(a) of Appendix D, once the model’s context window exceeds its pre-training length, attention entropy increases sharply, making effective extrapolation difficult.
+
+Findings from [6] indicate that the middle layers exhibit relatively lower attention entropy compared to other layers, a result corroborated by our experiment. For example, in the LLaMA2-7B model evaluated on the PG19 dataset, the mean entropy values for the first two layers, middle two layers, and last two layers are 7.5, 3.65, and 4.33, respectively. Consequently, when overall attention entropy fluctuates significantly, the relative change in the middle layers is more pronounced. By assigning a larger scaling coefficient to the middle layers, we can stabilize their entropy changes, as clearly shown in Figure 8(b). This strategy significantly improves the model’s extrapolation ability, as demonstrated in Table 3, further supporting our explanation.
+
+[6] Tang G, Sennrich R, Nivre J. Understanding Neural Machine Translation by Simplification: The Case of Encoder-free Models[C]//Recent Advances in Natural Language Processing (RANLP 2019). INCOMA Ltd., 2019: 1186-1193.
+
+
+### 7. Section 5: "We hypothesize that strategically assigning larger scaling factors to these middle layers during interpolation could strengthen the model’s extrapolation capabilities by stabilizing their attention variation." What do you mean by attention variation?
+
+As shown in Figure 8(a) of Appendix D, when the model's context window exceeds its pre-training length, the attention entropy increases sharply due to the lack of learned position encoding information beyond the pre-training window. This indicates a significant shift in the model's attention distribution, which directly disrupts its ability to perform reasoning effectively.
+
+
+### 8. I suggest the authors to reorganize the paper to improve its readability. The authors may also consider removing the analyses and making it a short paper. A paper does not need to answer everything. It is fine to leave some conjectures in the paper. However, it should not be acceptable to state those conjectures as conclusions if the analyses do not support them.
+
+thanks for your suggestion. we will reorganize the paper and  improve its readability.
+
+
+### 9. I am not sure why the authors choose to optimize the objective with genetic algorithm. As the parameters are continuous, gradient descent may also work well.
+
+In long-text modeling tasks, optimizing parameters via gradient descent incurs substantial computational costs due to the extended input length. The activation value stored by the model follow a weak quadratic growth with respect to input length. In contrast, our method requires only a small number of samples and determines the appropriate layer-specific scaling factors through model inference. 
+
+To model the search space, we use Bézier curves, which are defined by a limited number of control points, making this a combinatorial optimization problem. Therefore, we employ a genetic algorithm to optimize the control points efficiently.
+
+
+
+### 10. Head-wise scaling may be even better than layer-wise scaling.
+
+The comparison with head-wise scaling (Ms-PoE) [1] has already been discussed in the introduction section (lines 58-74) and used as a baseline for comparison (Table 2). In the experimental section, we conducted a detailed analysis of Ms-PoE in terms of performance, efficiency, and generalization ability (lines 457-508):
+
+(1) Scaling combined with layer features enhances the model’s utilization of all positions in the context. In contrast, head-wise scaling may potentially hinder the model’s ability to effectively utilize the latter part of the context.
+
+(2) During inference, head-wise scaling requires real-time computation of each head's sensitivity to different positions, followed by dynamic allocation of the corresponding scales. This process leads to relatively high inference latency.
+
+(3) Ms-PoE lacks a systematic approach for determining the scaling factors.
+
+
